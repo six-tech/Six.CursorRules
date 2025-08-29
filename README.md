@@ -392,14 +392,6 @@ This workflow ensures systematic, specification-driven development with clear tr
 4. Test local installation and functionality
 5. Publish to NuGet.org or private feeds
 
-## Installation & Usage
-
-### For Individual Projects
-
-1. Copy the desired `.mdc` rule files to your project's `.cursor/rules/` directory
-2. Customize the rules as needed for your specific requirements
-3. The Cursor AI assistant will automatically apply these rules when working in your project
-
 
 ## Related Resources
 
