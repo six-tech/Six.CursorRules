@@ -15,6 +15,11 @@ Cursor Rules are configuration files (`.mdc` format) that guide AI assistants in
 **Purpose**: Establishes a structured specification-driven development workflow that generates detailed spec files and ensures code implementation adheres to those specifications.
 This is **similar approach as Amazon's Kiro** does but manually with Cursor.
 
+**Example User Query**:
+```
+"Create a spec for user authentication feature with JWT tokens, password reset, and 2FA support using @coding-by-spec.mdc rules"
+```
+
 **Generated Files Structure**:
 ```
 .cursor/specs/
