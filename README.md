@@ -41,36 +41,31 @@ This is **similar approach as Amazon's Kiro** does but manually with Cursor.
 
 **Example Content:**
 
-<div style="background-color: rgba(128, 128, 128, 0.1); border-radius: 6px; padding: 8px 16px; margin: 16px 0; 
-font-size: 16px; line-height: 24px; overflow-x: auto;">
-
-# User Authentication Requirements
-
-## Primary User Stories
-
-```
-WHEN a user provides valid credentials
-THE SYSTEM SHALL authenticate the user and provide access to the application
-```
-
-```
-WHEN a user provides invalid credentials
-THE SYSTEM SHALL display an error message and deny access
-```
-
-```
-WHEN a user attempts to access a protected resource without authentication
-THE SYSTEM SHALL redirect to the login page
-```
-
-## Acceptance Criteria
-
-- Login form validates email format
-- Password must be at least 8 characters
-- System supports "Remember Me" functionality
-- Failed login attempts are logged for security
-
-</div>
+> **📋 User Authentication Requirements**
+> 
+> **Primary User Stories**
+> 
+> ```
+> WHEN a user provides valid credentials
+> THE SYSTEM SHALL authenticate the user and provide access to the application
+> ```
+> 
+> ```
+> WHEN a user provides invalid credentials
+> THE SYSTEM SHALL display an error message and deny access
+> ```
+> 
+> ```
+> WHEN a user attempts to access a protected resource without authentication
+> THE SYSTEM SHALL redirect to the login page
+> ```
+> 
+> **Acceptance Criteria**
+> 
+> - Login form validates email format
+> - Password must be at least 8 characters
+> - System supports "Remember Me" functionality
+> - Failed login attempts are logged for security
 
 #### 🏗️ design.md - Technical Architecture & Design Decisions
 
@@ -87,48 +82,43 @@ THE SYSTEM SHALL redirect to the login page
 
 **Example of Generated Content:**
 
-<div style="background-color: rgba(128, 128, 128, 0.1); border-radius: 6px; padding: 8px 16px; margin: 16px 0; 
-font-size: 16px; line-height: 24px; overflow-x: auto;">
-
-# Authentication System Design
-
-## Architecture Overview
-
-| Component | Responsibilities | Technology |
-|-----------|-----------------|------------|
-| **Web Client** | • Login Form<br/>• Registration<br/>• Password Reset | React/Vue/Angular |
-| **API Gateway** | • JWT Token Management<br/>• Session Management<br/>• Rate Limiting | API Gateway Service |
-| **Auth Service** | • User Store<br/>• Password Hashing<br/>• 2FA Support | ASP.NET Core API |
-
-**Data Flow:** Web Client → API Gateway → Auth Service
-
-## Component Specifications
-
-### Authentication Service
-- **Technology**: ASP.NET Core Web API
-- **Database**: PostgreSQL with Entity Framework
-- **Security**: JWT tokens with refresh token rotation
-- **Caching**: Redis for session management
-
-### Data Models
-
-```csharp
-public record User
-{
-    public Guid Id { get; init; }
-    public string Email { get; init; }
-    public bool IsEmailVerified { get; init; }
-    public DateTime CreatedAt { get; init; }
-}
-```
-
-## Security Considerations
-- Password hashing using Argon2id
-- Rate limiting: 5 attempts per minute per IP
-- JWT expiration: 15 minutes access, 7 days refresh
-- Audit logging for all authentication events
-
-</div>
+> **🏗️ Authentication System Design**
+> 
+> **Architecture Overview**
+> 
+> | Component | Responsibilities | Technology |
+> |-----------|-----------------|------------|
+> | **Web Client** | • Login Form<br/>• Registration<br/>• Password Reset | React/Vue/Angular |
+> | **API Gateway** | • JWT Token Management<br/>• Session Management<br/>• Rate Limiting | API Gateway Service |
+> | **Auth Service** | • User Store<br/>• Password Hashing<br/>• 2FA Support | ASP.NET Core API |
+> 
+> **Data Flow:** Web Client → API Gateway → Auth Service
+> 
+> **Component Specifications**
+> 
+> **Authentication Service**
+> - **Technology**: ASP.NET Core Web API
+> - **Database**: PostgreSQL with Entity Framework
+> - **Security**: JWT tokens with refresh token rotation
+> - **Caching**: Redis for session management
+> 
+> **Data Models**
+> 
+> ```csharp
+> public record User
+> {
+>     public Guid Id { get; init; }
+>     public string Email { get; init; }
+>     public bool IsEmailVerified { get; init; }
+>     public DateTime CreatedAt { get; init; }
+> }
+> ```
+> 
+> **Security Considerations**
+> - Password hashing using Argon2id
+> - Rate limiting: 5 attempts per minute per IP
+> - JWT expiration: 15 minutes access, 7 days refresh
+> - Audit logging for all authentication events
 
 
 #### ✅ tasks.md - Implementation Task Breakdown
@@ -144,113 +134,108 @@ public record User
 
 **Example Content:**
 
-<div style="background-color: rgba(128, 128, 128, 0.1); border-radius: 6px; padding: 8px 16px; margin: 16px 0; 
-font-size: 16px; line-height: 24px; overflow-x: auto;">
-
-# Authentication Feature - Implementation Tasks
-
-## Phase 1: Foundation Setup
-
-### Task 1.1: Database Schema Setup
-**Status**: ✅ Completed
-**Description**: Create user table with necessary fields for authentication
-**Acceptance Criteria**:
-- User table created with Id, Email, PasswordHash, IsEmailVerified, CreatedAt
-- Indexes on Email field for performance
-- Migration script created and tested
-
-**Effort**: 2 hours
-**Dependencies**: None
-
-### Task 1.2: Authentication Service Project Structure
-**Status**: 🔄 In Progress
-**Description**: Set up ASP.NET Core Web API project with dependency injection
-**Acceptance Criteria**:
-- Project created with proper folder structure
-- Dependency injection configured
-- Basic middleware setup (CORS, authentication, logging)
-
-**Effort**: 4 hours
-**Dependencies**: Task 1.1
-
-## Phase 2: Core Authentication Logic
-
-### Task 2.1: Password Hashing Implementation
-**Status**: ⏳ Pending
-**Description**: Implement secure password hashing using Argon2id
-**Acceptance Criteria**:
-- Password hashing service implemented
-- Password verification functionality
-- Unit tests for hashing/verification logic
-
-**Effort**: 3 hours
-**Dependencies**: Task 1.2
-
-### Task 2.2: JWT Token Service
-**Status**: ⏳ Pending
-**Description**: Implement JWT token generation and validation
-**Acceptance Criteria**:
-- Access token generation (15 min expiry)
-- Refresh token generation (7 days expiry)
-- Token validation middleware
-- Secure key management
-
-**Effort**: 4 hours
-**Dependencies**: Task 1.2
-
-## Phase 3: API Endpoints
-
-### Task 3.1: Login Endpoint
-**Status**: ⏳ Pending
-**Description**: Implement POST /api/auth/login endpoint
-**Acceptance Criteria**:
-- Accepts email/password in request body
-- Returns JWT tokens on successful authentication
-- Returns appropriate error messages for failures
-- Rate limiting implemented
-
-**Effort**: 3 hours
-**Dependencies**: Task 2.1, Task 2.2
-
-### Task 3.2: Registration Endpoint
-**Status**: ⏳ Pending
-**Description**: Implement POST /api/auth/register endpoint
-**Acceptance Criteria**:
-- Email validation and uniqueness checking
-- Password strength requirements
-- Email verification workflow initiated
-- Success/error responses properly formatted
-
-**Effort**: 4 hours
-**Dependencies**: Task 2.1, Task 1.2
-
-## Phase 4: Integration & Testing
-
-### Task 4.1: Integration Tests
-**Status**: ⏳ Pending
-**Description**: Create comprehensive integration tests for auth flow
-**Acceptance Criteria**:
-- Full authentication flow tested
-- Error scenarios covered
-- Database state verification
-- API contract validation
-
-**Effort**: 6 hours
-**Dependencies**: All Phase 3 tasks
-
-### Task 4.2: Security Testing
-**Status**: ⏳ Pending
-**Description**: Security audit and penetration testing
-**Acceptance Criteria**:
-- SQL injection prevention verified
-- XSS protection implemented
-- Rate limiting effectiveness tested
-- Security headers configured
-
-**Effort**: 4 hours
-**Dependencies**: All Phase 3 tasks
-
-</div>
+> **✅ Authentication Feature - Implementation Tasks**
+> 
+> **Phase 1: Foundation Setup**
+> 
+> **Task 1.1: Database Schema Setup**
+> **Status**: ✅ Completed
+> **Description**: Create user table with necessary fields for authentication
+> **Acceptance Criteria**:
+> - User table created with Id, Email, PasswordHash, IsEmailVerified, CreatedAt
+> - Indexes on Email field for performance
+> - Migration script created and tested
+> 
+> **Effort**: 2 hours
+> **Dependencies**: None
+> 
+> **Task 1.2: Authentication Service Project Structure**
+> **Status**: 🔄 In Progress
+> **Description**: Set up ASP.NET Core Web API project with dependency injection
+> **Acceptance Criteria**:
+> - Project created with proper folder structure
+> - Dependency injection configured
+> - Basic middleware setup (CORS, authentication, logging)
+> 
+> **Effort**: 4 hours
+> **Dependencies**: Task 1.1
+> 
+> **Phase 2: Core Authentication Logic**
+> 
+> **Task 2.1: Password Hashing Implementation**
+> **Status**: ⏳ Pending
+> **Description**: Implement secure password hashing using Argon2id
+> **Acceptance Criteria**:
+> - Password hashing service implemented
+> - Password verification functionality
+> - Unit tests for hashing/verification logic
+> 
+> **Effort**: 3 hours
+> **Dependencies**: Task 1.2
+> 
+> **Task 2.2: JWT Token Service**
+> **Status**: ⏳ Pending
+> **Description**: Implement JWT token generation and validation
+> **Acceptance Criteria**:
+> - Access token generation (15 min expiry)
+> - Refresh token generation (7 days expiry)
+> - Token validation middleware
+> - Secure key management
+> 
+> **Effort**: 4 hours
+> **Dependencies**: Task 1.2
+> 
+> **Phase 3: API Endpoints**
+> 
+> **Task 3.1: Login Endpoint**
+> **Status**: ⏳ Pending
+> **Description**: Implement POST /api/auth/login endpoint
+> **Acceptance Criteria**:
+> - Accepts email/password in request body
+> - Returns JWT tokens on successful authentication
+> - Returns appropriate error messages for failures
+> - Rate limiting implemented
+> 
+> **Effort**: 3 hours
+> **Dependencies**: Task 2.1, Task 2.2
+> 
+> **Task 3.2: Registration Endpoint**
+> **Status**: ⏳ Pending
+> **Description**: Implement POST /api/auth/register endpoint
+> **Acceptance Criteria**:
+> - Email validation and uniqueness checking
+> - Password strength requirements
+> - Email verification workflow initiated
+> - Success/error responses properly formatted
+> 
+> **Effort**: 4 hours
+> **Dependencies**: Task 2.1, Task 1.2
+> 
+> **Phase 4: Integration & Testing**
+> 
+> **Task 4.1: Integration Tests**
+> **Status**: ⏳ Pending
+> **Description**: Create comprehensive integration tests for auth flow
+> **Acceptance Criteria**:
+> - Full authentication flow tested
+> - Error scenarios covered
+> - Database state verification
+> - API contract validation
+> 
+> **Effort**: 6 hours
+> **Dependencies**: All Phase 3 tasks
+> 
+> **Task 4.2: Security Testing**
+> **Status**: ⏳ Pending
+> **Description**: Security audit and penetration testing
+> **Acceptance Criteria**:
+> - SQL injection prevention verified
+> - XSS protection implemented
+> - Rate limiting effectiveness tested
+> - Security headers configured
+> 
+> **Effort**: 4 hours
+> **Dependencies**: All Phase 3 tasks
 
 ## 🔄 How to Use Generated Specs for Code Implementation
 
