@@ -39,8 +39,11 @@ This is **similar approach as Amazon's Kiro** does but manually with Cursor.
 - Acceptance criteria that can be directly translated to test cases
 - Business rules and validation requirements
 
-**Example Content**:
-```markdown
+**Example Content:**
+
+<div style="background-color: rgba(128, 128, 128, 0.1); border-radius: 6px; padding: 8px 16px; margin: 16px 0; 
+font-size: 16px; line-height: 24px; overflow-x: auto;">
+
 # User Authentication Requirements
 
 ## Primary User Stories
@@ -66,7 +69,8 @@ THE SYSTEM SHALL redirect to the login page
 - Password must be at least 8 characters
 - System supports "Remember Me" functionality
 - Failed login attempts are logged for security
-```
+
+</div>
 
 #### 🏗️ design.md - Technical Architecture & Design Decisions
 
@@ -83,11 +87,12 @@ THE SYSTEM SHALL redirect to the login page
 
 **Example of Generated Content:**
 
-``` markdown
+<div style="background-color: rgba(128, 128, 128, 0.1); border-radius: 6px; padding: 8px 16px; margin: 16px 0; 
+font-size: 16px; line-height: 24px; overflow-x: auto;">
 
-## Authentication System Design
+# Authentication System Design
 
-### Architecture Overview
+## Architecture Overview
 
 | Component | Responsibilities | Technology |
 |-----------|-----------------|------------|
@@ -97,33 +102,33 @@ THE SYSTEM SHALL redirect to the login page
 
 **Data Flow:** Web Client → API Gateway → Auth Service
 
-### Component Specifications
+## Component Specifications
 
-#### Authentication Service
+### Authentication Service
 - **Technology**: ASP.NET Core Web API
 - **Database**: PostgreSQL with Entity Framework
 - **Security**: JWT tokens with refresh token rotation
 - **Caching**: Redis for session management
 
-#### Data Models
+### Data Models
 
+```csharp
 public record User
 {
     public Guid Id { get; init; }
     public string Email { get; init; }
-    public string PasswordHash { get; init; }
     public bool IsEmailVerified { get; init; }
     public DateTime CreatedAt { get; init; }
 }
+```
 
-
-### Security Considerations
+## Security Considerations
 - Password hashing using Argon2id
 - Rate limiting: 5 attempts per minute per IP
 - JWT expiration: 15 minutes access, 7 days refresh
 - Audit logging for all authentication events
 
-```
+</div>
 
 
 #### ✅ tasks.md - Implementation Task Breakdown
@@ -137,8 +142,11 @@ public record User
 - Progress tracking with status updates
 - Links to relevant requirements and design elements
 
-**Example Content**:
-```markdown
+**Example Content:**
+
+<div style="background-color: rgba(128, 128, 128, 0.1); border-radius: 6px; padding: 8px 16px; margin: 16px 0; 
+font-size: 16px; line-height: 24px; overflow-x: auto;">
+
 # Authentication Feature - Implementation Tasks
 
 ## Phase 1: Foundation Setup
@@ -241,7 +249,8 @@ public record User
 
 **Effort**: 4 hours
 **Dependencies**: All Phase 3 tasks
-```
+
+</div>
 
 ## 🔄 How to Use Generated Specs for Code Implementation
 
