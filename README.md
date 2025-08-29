@@ -12,19 +12,276 @@ Cursor Rules are configuration files (`.mdc` format) that guide AI assistants in
 
 ### 📋 [Coding by Specification](.cursor/rules/coding-by-spec.mdc)
 
-**Purpose**: Establishes a structured approach to writing software specifications and implementing code that adheres to those specifications.
+**Purpose**: Establishes a structured specification-driven development workflow that generates detailed spec files and ensures code implementation adheres to those specifications.
+This is **similar approach as Amazon's Kiro** does but manually with Cursor.
 
-**Key Features**:
-- **Requirements Phase**: Captures user stories and acceptance criteria using EARS (Easy Approach to Requirements' Syntax) notation
-- **Design Phase**: Documents technical architecture, sequence diagrams, and implementation considerations
-- **Implementation Planning**: Creates detailed task breakdowns with clear descriptions and outcomes
-- **Execution Tracking**: Provides real-time status updates for task completion
+**Generated Files Structure**:
+```
+.cursor/specs/
+└── {feature-name}/
+    ├── requirements.md
+    ├── design.md
+    └── tasks.md
+```
 
-**Example EARS Notation**:
+#### 📝 requirements.md - User Stories & Acceptance Criteria
+
+**Purpose**: Captures functional requirements using EARS (Easy Approach to Requirements' Syntax) notation for clear, testable specifications.
+
+**Content Structure**:
+- User stories written in structured EARS format
+- Each requirement in code blocks with specific WHEN/THEN syntax
+- Acceptance criteria that can be directly translated to test cases
+- Business rules and validation requirements
+
+**Example Content**:
+```markdown
+# User Authentication Requirements
+
+## Primary User Stories
+
 ```
-WHEN a user submits a form with invalid data
-THE SYSTEM SHALL display validation errors next to the relevant fields
+WHEN a user provides valid credentials
+THE SYSTEM SHALL authenticate the user and provide access to the application
 ```
+
+```
+WHEN a user provides invalid credentials
+THE SYSTEM SHALL display an error message and deny access
+```
+
+```
+WHEN a user attempts to access a protected resource without authentication
+THE SYSTEM SHALL redirect to the login page
+```
+
+## Acceptance Criteria
+
+- Login form validates email format
+- Password must be at least 8 characters
+- System supports "Remember Me" functionality
+- Failed login attempts are logged for security
+```
+
+#### 🏗️ design.md - Technical Architecture & Design Decisions
+
+**Purpose**: Documents the technical architecture, component interactions, and implementation considerations for the feature.
+
+**Content Structure**:
+- High-level system architecture diagram
+- Component relationships and data flow
+- Database schema designs (if applicable)
+- API endpoint specifications
+- Security considerations
+- Performance requirements
+- Technology stack decisions
+
+**Example of Generated Content:**
+
+``` markdown
+
+## Authentication System Design
+
+### Architecture Overview
+
+| Component | Responsibilities | Technology |
+|-----------|-----------------|------------|
+| **Web Client** | • Login Form<br/>• Registration<br/>• Password Reset | React/Vue/Angular |
+| **API Gateway** | • JWT Token Management<br/>• Session Management<br/>• Rate Limiting | API Gateway Service |
+| **Auth Service** | • User Store<br/>• Password Hashing<br/>• 2FA Support | ASP.NET Core API |
+
+**Data Flow:** Web Client → API Gateway → Auth Service
+
+### Component Specifications
+
+#### Authentication Service
+- **Technology**: ASP.NET Core Web API
+- **Database**: PostgreSQL with Entity Framework
+- **Security**: JWT tokens with refresh token rotation
+- **Caching**: Redis for session management
+
+#### Data Models
+
+public record User
+{
+    public Guid Id { get; init; }
+    public string Email { get; init; }
+    public string PasswordHash { get; init; }
+    public bool IsEmailVerified { get; init; }
+    public DateTime CreatedAt { get; init; }
+}
+
+
+### Security Considerations
+- Password hashing using Argon2id
+- Rate limiting: 5 attempts per minute per IP
+- JWT expiration: 15 minutes access, 7 days refresh
+- Audit logging for all authentication events
+
+```
+
+
+#### ✅ tasks.md - Implementation Task Breakdown
+
+**Purpose**: Provides a detailed, trackable implementation plan with discrete tasks that can be executed systematically.
+
+**Content Structure**:
+- Task breakdown with clear descriptions
+- Estimated effort and dependencies
+- Acceptance criteria for each task
+- Progress tracking with status updates
+- Links to relevant requirements and design elements
+
+**Example Content**:
+```markdown
+# Authentication Feature - Implementation Tasks
+
+## Phase 1: Foundation Setup
+
+### Task 1.1: Database Schema Setup
+**Status**: ✅ Completed
+**Description**: Create user table with necessary fields for authentication
+**Acceptance Criteria**:
+- User table created with Id, Email, PasswordHash, IsEmailVerified, CreatedAt
+- Indexes on Email field for performance
+- Migration script created and tested
+
+**Effort**: 2 hours
+**Dependencies**: None
+
+### Task 1.2: Authentication Service Project Structure
+**Status**: 🔄 In Progress
+**Description**: Set up ASP.NET Core Web API project with dependency injection
+**Acceptance Criteria**:
+- Project created with proper folder structure
+- Dependency injection configured
+- Basic middleware setup (CORS, authentication, logging)
+
+**Effort**: 4 hours
+**Dependencies**: Task 1.1
+
+## Phase 2: Core Authentication Logic
+
+### Task 2.1: Password Hashing Implementation
+**Status**: ⏳ Pending
+**Description**: Implement secure password hashing using Argon2id
+**Acceptance Criteria**:
+- Password hashing service implemented
+- Password verification functionality
+- Unit tests for hashing/verification logic
+
+**Effort**: 3 hours
+**Dependencies**: Task 1.2
+
+### Task 2.2: JWT Token Service
+**Status**: ⏳ Pending
+**Description**: Implement JWT token generation and validation
+**Acceptance Criteria**:
+- Access token generation (15 min expiry)
+- Refresh token generation (7 days expiry)
+- Token validation middleware
+- Secure key management
+
+**Effort**: 4 hours
+**Dependencies**: Task 1.2
+
+## Phase 3: API Endpoints
+
+### Task 3.1: Login Endpoint
+**Status**: ⏳ Pending
+**Description**: Implement POST /api/auth/login endpoint
+**Acceptance Criteria**:
+- Accepts email/password in request body
+- Returns JWT tokens on successful authentication
+- Returns appropriate error messages for failures
+- Rate limiting implemented
+
+**Effort**: 3 hours
+**Dependencies**: Task 2.1, Task 2.2
+
+### Task 3.2: Registration Endpoint
+**Status**: ⏳ Pending
+**Description**: Implement POST /api/auth/register endpoint
+**Acceptance Criteria**:
+- Email validation and uniqueness checking
+- Password strength requirements
+- Email verification workflow initiated
+- Success/error responses properly formatted
+
+**Effort**: 4 hours
+**Dependencies**: Task 2.1, Task 1.2
+
+## Phase 4: Integration & Testing
+
+### Task 4.1: Integration Tests
+**Status**: ⏳ Pending
+**Description**: Create comprehensive integration tests for auth flow
+**Acceptance Criteria**:
+- Full authentication flow tested
+- Error scenarios covered
+- Database state verification
+- API contract validation
+
+**Effort**: 6 hours
+**Dependencies**: All Phase 3 tasks
+
+### Task 4.2: Security Testing
+**Status**: ⏳ Pending
+**Description**: Security audit and penetration testing
+**Acceptance Criteria**:
+- SQL injection prevention verified
+- XSS protection implemented
+- Rate limiting effectiveness tested
+- Security headers configured
+
+**Effort**: 4 hours
+**Dependencies**: All Phase 3 tasks
+```
+
+## 🔄 How to Use Generated Specs for Code Implementation
+
+### Step 1: Spec Generation
+```
+"Create a spec for user authentication feature"
+```
+Cursor will generate the three files in `.cursor/specs/user-authentication/`
+
+### Step 2: Requirements Review
+- Review `requirements.md` to understand business needs
+- Validate acceptance criteria are complete and testable
+- Identify any missing requirements
+
+### Step 3: Design Review
+- Review `design.md` for technical architecture
+- Understand component interactions and data flow
+- Verify technology choices align with project standards
+
+### Step 4: Task-Driven Implementation
+- Start with Phase 1 tasks from `tasks.md`
+- Mark tasks as "In Progress" when starting work
+- Update status to "Completed" with checkmark when done
+- Use task descriptions as implementation guides
+
+### Step 5: Cursor-Assisted Coding
+When implementing, Cursor will:
+- Reference the spec files for context
+- Generate code that matches the documented architecture
+- Ensure implementation aligns with requirements
+- Create tests based on acceptance criteria
+
+### Step 6: Iterative Refinement
+- Update specs as implementation reveals new requirements
+- Add new tasks for discovered work
+- Refine design based on implementation learnings
+
+**Example Cursor Commands**:
+```
+"Implement the login endpoint according to the authentication spec"
+"Create unit tests for the password hashing service as defined in tasks.md"
+"Generate the User model based on the design.md specifications"
+```
+
+This workflow ensures systematic, specification-driven development with clear traceability from requirements to implementation.
 
 ### 🎨 [Coding Style](.cursor/rules/coding-style.mdc)
 
@@ -119,29 +376,6 @@ THE SYSTEM SHALL display validation errors next to the relevant fields
 2. Customize the rules as needed for your specific requirements
 3. The Cursor AI assistant will automatically apply these rules when working in your project
 
-### For Teams
-
-1. Create a centralized repository of Cursor rules
-2. Share the rules across team projects
-3. Establish team-specific customizations
-4. Regularly update rules based on team feedback and evolving best practices
-
-## Contributing
-
-We welcome contributions to improve and expand the Cursor Rules collection:
-
-1. **New Rules**: Propose new rule files for specific technologies or domains
-2. **Rule Improvements**: Enhance existing rules with better examples or additional guidelines
-3. **Documentation**: Improve rule documentation and examples
-4. **Best Practices**: Share successful implementations and patterns
-
-### Contribution Guidelines
-
-- Follow the existing rule structure and formatting
-- Include comprehensive examples with clear "do" and "don't" scenarios
-- Ensure rules are technology-agnostic where possible
-- Test rules in real-world scenarios before proposing
-- Document the rationale and benefits of new rules
 
 ## Related Resources
 
