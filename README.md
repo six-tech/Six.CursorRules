@@ -8,6 +8,31 @@ A comprehensive collection of Cursor AI assistant rules designed to enhance soft
 
 Cursor Rules are configuration files (`.mdc` format) that guide AI assistants in Cursor IDE to follow specific development practices, coding standards, and workflow patterns. These rules ensure consistent code quality, proper documentation, and adherence to industry best practices across different domains and technologies.
 
+## Installation
+
+To use these Cursor Rules in your project:
+
+1. **Copy the rules** - Copy the desired `.mdc` rule files from this repository to your project's `.cursor/rules/` directory
+2. **Create the directory** - If the `.cursor/rules/` directory doesn't exist, create it in your solution root
+3. **Restart Cursor** - Restart Cursor IDE to ensure the new rules are loaded
+4. **Verify activation** - The AI assistant will automatically apply these rules when working in your project
+
+**Directory Structure:**
+```
+YourSolution/
+├── .cursor/
+│   └── rules/
+│       ├── coding-by-spec.mdc
+│       ├── coding-style.mdc
+│       ├── consuming-dotnettool.mdc
+│       ├── meta.mdc
+│       ├── nuget-package-publishing.mdc
+│       └── publishing-dotnettool.mdc
+├── src/
+├── tests/
+└── README.md
+```
+
 ## Available Rules
 
 ### 📋 [Coding by Specification](.cursor/rules/coding-by-spec.mdc)
