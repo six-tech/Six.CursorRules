@@ -1,0 +1,701 @@
+---
+description: This file provides comprehensive guidelines for writing clean, maintainable Avalonia XAML and C# code with modern UI patterns, MVVM architecture, and performance best practices.
+alwaysApply: false
+---
+## Role Definition:
+ - Avalonia UI Expert
+ - XAML Specialist
+ - MVVM Architecture Specialist
+ - Cross-Platform Desktop Application Developer
+
+## General:
+  Description: >
+    Avalonia XAML and C# code should be written to maximize readability, maintainability, and performance
+    while following MVVM patterns, proper data binding, and cross-platform compatibility. Focus on
+    reactive programming patterns, proper resource management, and modern Avalonia UI features.
+  Requirements:
+    - Follow MVVM architecture patterns
+    - Use reactive programming with ReactiveUI when appropriate
+    - Write performant and memory-efficient UI code
+    - Ensure cross-platform compatibility
+    - Use modern Avalonia UI features and controls
+
+## XAML Structure and Organization:
+
+### View Structure:
+  - Organize XAML with clear hierarchy and proper indentation:
+      ```xml
+      <!-- Good: Clear structure with proper organization -->
+      <UserControl x:Class="MyApp.Views.CustomerView"
+                   xmlns="https://github.com/avaloniaui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:vm="using:MyApp.ViewModels"
+                   xmlns:controls="using:MyApp.Controls">
+        
+        <Design.DataContext>
+          <vm:CustomerViewModel />
+        </Design.DataContext>
+        
+        <Grid RowDefinitions="Auto,*,Auto">
+          <!-- Header -->
+          <StackPanel Grid.Row="0" Classes="header">
+            <TextBlock Text="{Binding Title}" Classes="title" />
+          </StackPanel>
+          
+          <!-- Content -->
+          <ScrollViewer Grid.Row="1">
+            <ContentPresenter Content="{Binding CurrentView}" />
+          </ScrollViewer>
+          
+          <!-- Footer -->
+          <StackPanel Grid.Row="2" Classes="footer">
+            <Button Command="{Binding SaveCommand}" Content="Save" />
+          </StackPanel>
+        </Grid>
+      </UserControl>
+      
+      <!-- Avoid: Flat structure without organization -->
+      <UserControl>
+        <TextBlock Text="{Binding Title}" />
+        <Button Command="{Binding SaveCommand}" />
+        <ListBox Items="{Binding Items}" />
+      </UserControl>
+      ```
+
+### Namespace Organization:
+  - Use consistent and meaningful namespace aliases:
+      ```xml
+      <!-- Good: Clear namespace organization -->
+      <UserControl xmlns="https://github.com/avaloniaui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:vm="using:MyApp.ViewModels"
+                   xmlns:controls="using:MyApp.Controls"
+                   xmlns:converters="using:MyApp.Converters"
+                   xmlns:behaviors="using:MyApp.Behaviors">
+      
+      <!-- Avoid: Generic or unclear aliases -->
+      <UserControl xmlns:local="using:MyApp"
+                   xmlns:stuff="using:MyApp.Something">
+      ```
+
+## Data Binding Best Practices:
+
+### Binding Syntax:
+  - Use proper binding modes and null handling:
+      ```xml
+      <!-- Good: Explicit binding modes and null handling -->
+      <TextBox Text="{Binding CustomerName, Mode=TwoWay, FallbackValue=''}" />
+      <TextBlock Text="{Binding LastUpdated, StringFormat='Last updated: {0:yyyy-MM-dd}'}" />
+      <CheckBox IsChecked="{Binding IsActive, Mode=TwoWay}" />
+      
+      <!-- Good: Command binding with parameter -->
+      <Button Command="{Binding DeleteCommand}" 
+              CommandParameter="{Binding SelectedItem}"
+              Content="Delete" />
+      
+      <!-- Avoid: Implicit binding modes -->
+      <TextBox Text="{Binding CustomerName}" />
+      ```
+
+### Collection Binding:
+  - Use proper collection binding with item templates:
+      ```xml
+      <!-- Good: Proper collection binding with templates -->
+      <ListBox Items="{Binding Customers}"
+               SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <Border Classes="customer-item">
+              <StackPanel>
+                <TextBlock Text="{Binding Name}" Classes="customer-name" />
+                <TextBlock Text="{Binding Email}" Classes="customer-email" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      
+      <!-- Good: DataGrid with proper column definitions -->
+      <DataGrid Items="{Binding Orders}" 
+                SelectedItem="{Binding SelectedOrder, Mode=TwoWay}"
+                IsReadOnly="True">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Order ID" Binding="{Binding Id}" />
+          <DataGridTextColumn Header="Customer" Binding="{Binding CustomerName}" />
+          <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=C}" />
+        </DataGrid.Columns>
+      </DataGrid>
+      ```
+
+## Styling and Theming:
+
+### Style Definitions:
+  - Create reusable and maintainable styles:
+      ```xml
+      <!-- Good: Organized styles with clear naming -->
+      <Styles xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        
+        <!-- Base button style -->
+        <Style Selector="Button.primary">
+          <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+          <Setter Property="Foreground" Value="{DynamicResource PrimaryForegroundBrush}" />
+          <Setter Property="Padding" Value="12,6" />
+          <Setter Property="CornerRadius" Value="4" />
+        </Style>
+        
+        <!-- Hover state -->
+        <Style Selector="Button.primary:pointerover">
+          <Setter Property="Background" Value="{DynamicResource PrimaryHoverBrush}" />
+        </Style>
+        
+        <!-- Disabled state -->
+        <Style Selector="Button.primary:disabled">
+          <Setter Property="Opacity" Value="0.6" />
+        </Style>
+      </Styles>
+      
+      <!-- Avoid: Inline styles without reusability -->
+      <Button Background="Blue" Foreground="White" Padding="10" />
+      ```
+
+### Resource Management:
+  - Use proper resource organization:
+      ```xml
+      <!-- Good: Organized resources -->
+      <Application.Resources>
+        <ResourceDictionary>
+          <!-- Colors -->
+          <Color x:Key="PrimaryColor">#2196F3</Color>
+          <Color x:Key="SecondaryColor">#FFC107</Color>
+          
+          <!-- Brushes -->
+          <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
+          <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}" />
+          
+          <!-- Converters -->
+          <converters:BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+          <converters:InverseBooleanConverter x:Key="InverseBool" />
+        </ResourceDictionary>
+      </Application.Resources>
+      ```
+
+## MVVM Architecture:
+
+### ViewModel Structure:
+  - Create clean and testable ViewModels:
+      ```csharp
+      // Good: Clean ViewModel with ReactiveUI
+      public sealed class CustomerViewModel : ViewModelBase
+      {
+          readonly ICustomerService _customerService;
+          readonly ObservableAsPropertyHelper<bool> _isLoading;
+          
+          [Reactive] public string SearchText { get; set; } = string.Empty;
+          [Reactive] public Customer? SelectedCustomer { get; set; }
+          
+          public bool IsLoading => _isLoading.Value;
+          
+          public ReactiveCommand<Unit, Unit> LoadCustomersCommand { get; }
+          public ReactiveCommand<Customer, Unit> DeleteCustomerCommand { get; }
+          
+          public CustomerViewModel(ICustomerService customerService)
+          {
+              _customerService = customerService;
+              
+              LoadCustomersCommand = ReactiveCommand.CreateFromTask(LoadCustomersAsync);
+              DeleteCustomerCommand = ReactiveCommand.CreateFromTask<Customer>(DeleteCustomerAsync);
+              
+              _isLoading = LoadCustomersCommand.IsExecuting
+                  .ToProperty(this, x => x.IsLoading);
+                  
+              // Search functionality
+              this.WhenAnyValue(x => x.SearchText)
+                  .Throttle(TimeSpan.FromMilliseconds(300))
+                  .DistinctUntilChanged()
+                  .Subscribe(FilterCustomers);
+          }
+          
+          async Task LoadCustomersAsync()
+          {
+              var customers = await _customerService.GetAllAsync();
+              Customers.Clear();
+              Customers.AddRange(customers);
+          }
+          
+          async Task DeleteCustomerAsync(Customer customer)
+          {
+              await _customerService.DeleteAsync(customer.Id);
+              Customers.Remove(customer);
+          }
+          
+          void FilterCustomers(string searchText)
+          {
+              // Implement filtering logic
+          }
+      }
+      
+      // Avoid: ViewModels with business logic mixed in
+      public class CustomerViewModel : INotifyPropertyChanged
+      {
+          public void SaveCustomer()
+          {
+              // Database logic directly in ViewModel
+              using var connection = new SqlConnection(connectionString);
+              // ... database operations
+          }
+      }
+      ```
+
+### View-ViewModel Connection:
+  - Properly connect Views and ViewModels:
+      ```csharp
+      // Good: Clean View code-behind
+      public partial class CustomerView : UserControl
+      {
+          public CustomerView()
+          {
+              InitializeComponent();
+          }
+          
+          public CustomerView(CustomerViewModel viewModel) : this()
+          {
+              DataContext = viewModel;
+          }
+      }
+      
+      // Good: Design-time data context in XAML
+      <UserControl.DataContext>
+          <vm:CustomerViewModel />
+      </UserControl.DataContext>
+      ```
+
+## Custom Controls and UserControls:
+
+### Control Development:
+  - Create reusable and properly structured controls:
+      ```csharp
+      // Good: Custom control with proper dependency properties
+      public sealed class LoadingButton : Button
+      {
+          public static readonly StyledProperty<bool> IsLoadingProperty =
+              AvaloniaProperty.Register<LoadingButton, bool>(nameof(IsLoading));
+              
+          public static readonly StyledProperty<string> LoadingTextProperty =
+              AvaloniaProperty.Register<LoadingButton, string>(
+                  nameof(LoadingText), 
+                  "Loading...");
+          
+          public bool IsLoading
+          {
+              get => GetValue(IsLoadingProperty);
+              set => SetValue(IsLoadingProperty, value);
+          }
+          
+          public string LoadingText
+          {
+              get => GetValue(LoadingTextProperty);
+              set => SetValue(LoadingTextProperty, value);
+          }
+          
+          protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+          {
+              base.OnApplyTemplate(e);
+              UpdateVisualState();
+          }
+          
+          protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+          {
+              base.OnPropertyChanged(change);
+              
+              if (change.Property == IsLoadingProperty)
+              {
+                  UpdateVisualState();
+              }
+          }
+          
+          void UpdateVisualState()
+          {
+              PseudoClasses.Set(":loading", IsLoading);
+              IsEnabled = !IsLoading;
+          }
+      }
+      ```
+
+### Control Templates:
+  - Define proper control templates:
+      ```xml
+      <!-- Good: Comprehensive control template -->
+      <Style Selector="controls|LoadingButton">
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}">
+              <Grid>
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  Content="{TemplateBinding Content}"
+                                  Margin="{TemplateBinding Padding}"
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                  
+                <StackPanel Name="PART_LoadingPanel"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            IsVisible="False">
+                  <controls:LoadingSpinner Width="16" Height="16" Margin="0,0,8,0" />
+                  <TextBlock Text="{TemplateBinding LoadingText}" />
+                </StackPanel>
+              </Grid>
+            </Border>
+          </ControlTemplate>
+        </Setter>
+      </Style>
+      
+      <!-- Loading state -->
+      <Style Selector="controls|LoadingButton:loading /template/ Panel#PART_ContentPresenter">
+        <Setter Property="IsVisible" Value="False" />
+      </Style>
+      
+      <Style Selector="controls|LoadingButton:loading /template/ Panel#PART_LoadingPanel">
+        <Setter Property="IsVisible" Value="True" />
+      </Style>
+      ```
+
+## Performance and Memory Management:
+
+### Virtualization:
+  - Use virtualization for large collections:
+      ```xml
+      <!-- Good: Virtualized list for performance -->
+      <ListBox Items="{Binding LargeCollection}"
+               VirtualizationMode="Simple">
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <VirtualizingStackPanel />
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+      </ListBox>
+      
+      <!-- Good: TreeView with virtualization -->
+      <TreeView Items="{Binding TreeItems}">
+        <TreeView.ItemsPanel>
+          <ItemsPanelTemplate>
+            <VirtualizingStackPanel />
+          </ItemsPanelTemplate>
+        </TreeView.ItemsPanel>
+      </TreeView>
+      ```
+
+### Resource Disposal:
+  - Properly manage resources and subscriptions:
+      ```csharp
+      // Good: Proper disposal in ViewModels
+      public sealed class CustomerViewModel : ViewModelBase, IDisposable
+      {
+          readonly CompositeDisposable _disposables = new();
+          
+          public CustomerViewModel()
+          {
+              // Add subscriptions to disposables
+              this.WhenAnyValue(x => x.SearchText)
+                  .Subscribe(OnSearchTextChanged)
+                  .DisposeWith(_disposables);
+          }
+          
+          public void Dispose()
+          {
+              _disposables?.Dispose();
+          }
+      }
+      ```
+
+## Converters and Behaviors:
+
+### Value Converters:
+  - Create reusable and efficient converters:
+      ```csharp
+      // Good: Efficient and reusable converter
+      public sealed class BooleanToVisibilityConverter : IValueConverter
+      {
+          public static readonly BooleanToVisibilityConverter Instance = new();
+          
+          public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+          {
+              if (value is bool boolValue)
+              {
+                  var invert = parameter?.ToString()?.Equals("Invert", StringComparison.OrdinalIgnoreCase) == true;
+                  var result = invert ? !boolValue : boolValue;
+                  return result ? Visibility.Visible : Visibility.Collapsed;
+              }
+              
+              return Visibility.Collapsed;
+          }
+          
+          public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+          {
+              if (value is Visibility visibility)
+              {
+                  var invert = parameter?.ToString()?.Equals("Invert", StringComparison.OrdinalIgnoreCase) == true;
+                  var result = visibility == Visibility.Visible;
+                  return invert ? !result : result;
+              }
+              
+              return false;
+          }
+      }
+      ```
+
+### Behaviors:
+  - Use behaviors for UI interactions:
+      ```csharp
+      // Good: Reusable behavior
+      public sealed class DoubleClickBehavior : Behavior<Control>
+      {
+          public static readonly StyledProperty<ICommand?> CommandProperty =
+              AvaloniaProperty.Register<DoubleClickBehavior, ICommand?>(nameof(Command));
+              
+          public static readonly StyledProperty<object?> CommandParameterProperty =
+              AvaloniaProperty.Register<DoubleClickBehavior, object?>(nameof(CommandParameter));
+          
+          public ICommand? Command
+          {
+              get => GetValue(CommandProperty);
+              set => SetValue(CommandProperty, value);
+          }
+          
+          public object? CommandParameter
+          {
+              get => GetValue(CommandParameterProperty);
+              set => SetValue(CommandParameterProperty, value);
+          }
+          
+          protected override void OnAttached()
+          {
+              if (AssociatedObject is not null)
+              {
+                  AssociatedObject.DoubleTapped += OnDoubleTapped;
+              }
+          }
+          
+          protected override void OnDetaching()
+          {
+              if (AssociatedObject is not null)
+              {
+                  AssociatedObject.DoubleTapped -= OnDoubleTapped;
+              }
+          }
+          
+          void OnDoubleTapped(object? sender, TappedEventArgs e)
+          {
+              if (Command?.CanExecute(CommandParameter) == true)
+              {
+                  Command.Execute(CommandParameter);
+              }
+          }
+      }
+      ```
+
+## Cross-Platform Considerations:
+
+### Platform-Specific Code:
+  - Handle platform differences properly:
+      ```csharp
+      // Good: Platform-specific implementations
+      public static class PlatformHelper
+      {
+          public static bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+          public static bool IsMacOS => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+          public static bool IsLinux => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+          
+          public static void OpenUrl(string url)
+          {
+              try
+              {
+                  if (IsWindows)
+                  {
+                      Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                  }
+                  else if (IsMacOS)
+                  {
+                      Process.Start("open", url);
+                  }
+                  else if (IsLinux)
+                  {
+                      Process.Start("xdg-open", url);
+                  }
+              }
+              catch (Exception ex)
+              {
+                  // Handle or log exception
+              }
+          }
+      }
+      ```
+
+### Responsive Design:
+  - Create responsive layouts:
+      ```xml
+      <!-- Good: Responsive design with adaptive layouts -->
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" MinWidth="200" MaxWidth="300" />
+          <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        
+        <!-- Sidebar that can collapse on small screens -->
+        <Border Grid.Column="0" Classes="sidebar">
+          <ScrollViewer>
+            <StackPanel>
+              <!-- Navigation items -->
+            </StackPanel>
+          </ScrollViewer>
+        </Border>
+        
+        <!-- Main content area -->
+        <ContentPresenter Grid.Column="1" 
+                          Content="{Binding CurrentView}" 
+                          Classes="main-content" />
+      </Grid>
+      
+      <!-- Style for small screens -->
+      <Style Selector="Grid:maxwidth(800) Border.sidebar">
+        <Setter Property="IsVisible" Value="False" />
+      </Style>
+      ```
+
+## Testing and Design-Time Support:
+
+### Design-Time Data:
+  - Provide proper design-time support:
+      ```csharp
+      // Good: Design-time ViewModel
+      public sealed class DesignCustomerViewModel : CustomerViewModel
+      {
+          public DesignCustomerViewModel() : base(new DesignCustomerService())
+          {
+              SearchText = "Sample search";
+              SelectedCustomer = new Customer 
+              { 
+                  Name = "John Doe", 
+                  Email = "john@example.com" 
+              };
+          }
+      }
+      
+      public sealed class DesignCustomerService : ICustomerService
+      {
+          public Task<IEnumerable<Customer>> GetAllAsync() =>
+              Task.FromResult(GenerateSampleCustomers());
+              
+          IEnumerable<Customer> GenerateSampleCustomers() =>
+              Enumerable.Range(1, 10)
+                  .Select(i => new Customer 
+                  { 
+                      Id = i, 
+                      Name = $"Customer {i}", 
+                      Email = $"customer{i}@example.com" 
+                  });
+      }
+      ```
+
+### XAML Design-Time Context:
+  - Set up proper design-time context:
+      ```xml
+      <!-- Good: Design-time context -->
+      <UserControl x:Class="MyApp.Views.CustomerView"
+                   xmlns="https://github.com/avaloniaui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:vm="using:MyApp.ViewModels"
+                   xmlns:design="using:MyApp.ViewModels.Design">
+        
+        <Design.DataContext>
+          <design:DesignCustomerViewModel />
+        </Design.DataContext>
+        
+        <!-- Rest of XAML -->
+      </UserControl>
+      ```
+
+## Error Handling and Validation:
+
+### Input Validation:
+  - Implement proper validation:
+      ```csharp
+      // Good: ViewModel with validation
+      public sealed class CustomerEditViewModel : ViewModelBase, INotifyDataErrorInfo
+      {
+          readonly Dictionary<string, List<string>> _errors = new();
+          
+          string _name = string.Empty;
+          public string Name
+          {
+              get => _name;
+              set
+              {
+                  this.RaiseAndSetIfChanged(ref _name, value);
+                  ValidateName();
+              }
+          }
+          
+          public bool HasErrors => _errors.Any();
+          
+          public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+          
+          public IEnumerable GetErrors(string? propertyName)
+          {
+              if (propertyName is not null && _errors.TryGetValue(propertyName, out var errors))
+              {
+                  return errors;
+              }
+              return Enumerable.Empty<string>();
+          }
+          
+          void ValidateName()
+          {
+              var errors = new List<string>();
+              
+              if (string.IsNullOrWhiteSpace(Name))
+              {
+                  errors.Add("Name is required");
+              }
+              else if (Name.Length < 2)
+              {
+                  errors.Add("Name must be at least 2 characters");
+              }
+              
+              SetErrors(nameof(Name), errors);
+          }
+          
+          void SetErrors(string propertyName, List<string> errors)
+          {
+              if (errors.Any())
+              {
+                  _errors[propertyName] = errors;
+              }
+              else
+              {
+                  _errors.Remove(propertyName);
+              }
+              
+              ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+          }
+      }
+      ```
+
+## Documentation:
+Write extensive technical XML doc comments for the generated code.
+
+### Documentation rules:
+ - Be technical, detailed but straight to the point
+ - DO NOT write XML documentation comments for private members, methods, etc.
+ - DO NOT write XML documentation comments if there are XML doc comments already applied but rewrite if they are not valid anymore
+ - For each ViewModel, UserControl, Window, and custom control write extensive documentation what this type is for and how to use it
+ - For properties in ViewModels and custom controls, write brief and concise XML documentation of what this property is for and how to use it
+ - DO NOT by ANY MEANS change APIs, property, method names, etc. unless explicitly requested by the user
+ - DO NOT write XML documentation comments for members implementing interfaces and abstract classes, they are already documented in the interface
+ - DO NOT write XML documentation comments for overriden members, they are already documented in the base class
+
+# End of Cursor Rules File
