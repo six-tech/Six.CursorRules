@@ -4,6 +4,11 @@
 
 A comprehensive collection of Cursor AI assistant rules designed to enhance software development quality, consistency, and productivity. This project provides structured guidelines for various aspects of software development including coding standards, specification writing, package publishing, and tool management.
 
+**Sources:**
+[.NET Cursor Rules by Aaronontheweb](https://github.com/Aaronontheweb/dotnet-cursor-rules)
+[Cursor Official Directory](https://cursor.directory/rules)
+
+
 ## What are Cursor Rules?
 
 Cursor Rules are configuration files (`.mdc` format) that guide AI assistants in Cursor IDE to follow specific development practices, coding standards, and workflow patterns. These rules ensure consistent code quality, proper documentation, and adherence to industry best practices across different domains and technologies.

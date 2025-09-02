@@ -10,12 +10,12 @@ alwaysApply: false
 # maintain consistency, quality, and security across published tools.
 
 
-## Role Definition:
+Role Definition:
  - .NET Expert
  - OSS author
  - Aware that users running on multiple versions of .NET in different environments might need access to this tool
 
-## General:
+General:
   Description: >
     The dotnet tool must be packaged as a NuGet package that adheres to
     semantic versioning, proper dependency management, and includes comprehensive
@@ -25,7 +25,7 @@ alwaysApply: false
     - Follow semantic versioning (MAJOR.MINOR.PATCH)
     - Ensure the tool is documented with a README and inline help support
 
-## Preparation:
+Preparation:
   - Validate that the project file includes:
       - <PackAsTool>true</PackAsTool>
       - Proper versioning and package metadata (e.g., PackageId, Authors, Description, License)
@@ -37,7 +37,7 @@ alwaysApply: false
   - Always target the most recent long-term release of .NET (currently .NET 8) unless the project is explicitly set to multi-target or targets and older version of the runtime
   - Always include a `<RollForward>LatestMajor</RollForward>` so the tool can automatically be used with newer runtimes without a new version needing to be released
 
-## Packaging:
+Packaging:
   - Use the `dotnet pack` command to generate the NuGet package:
       - Ensure that all necessary files (binaries, assets, configuration files) are included
       - Verify that the output .nupkg file contains the expected metadata and assets
