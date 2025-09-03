@@ -52,6 +52,7 @@ This document outlines the meta-rules for cursor operations in this repository.
 1. **Examples**
     - Always include "do" and "don't" examples when showing specific changes to files or syntax
     - Include helpful comments that explain why an example is a "do" or a "don't"    
+    - Group rules in logical groups using heading elements
 
 
 # End of Cursor Rules File

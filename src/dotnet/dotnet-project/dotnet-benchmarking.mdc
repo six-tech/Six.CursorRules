@@ -1,6 +1,6 @@
 ---
 description: Designing benchmarks for measuring .NET performance
-globs: 
+globs: Directory.Packages.props, *.csproj, *.cs
 alwaysApply: false
 ---
 # Cursor Rules File: .NET Benchmarking Best Practices
@@ -29,17 +29,17 @@ Project Setup:
       ```xml
       <Project Sdk="Microsoft.NET.Sdk">
         <PropertyGroup>
-          <OutputType>Exe</OutputType>
-          <TargetFramework>net8.0</TargetFramework>
-          <Configuration>Release</Configuration>
-          <Optimize>true</Optimize>
-          <DebugSymbols>false</DebugSymbols>
+            <OutputType>Exe</OutputType>
+            <TargetFramework>net9.0</TargetFramework>
+            <Configuration>Release</Configuration>
+            <Optimize>true</Optimize>
+            <DebugSymbols>false</DebugSymbols>
         </PropertyGroup>
-        
+    
         <ItemGroup>
-          <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
-          <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.10" 
-              Condition="'$(OS)' == 'Windows_NT'" />
+            <PackageReference Include="BenchmarkDotNet" Version="0.15.2"/>
+            <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.15.2"
+                              Condition="'$(OS)' == 'Windows_NT'"/>
         </ItemGroup>
       </Project>
       ```
@@ -51,8 +51,8 @@ Benchmark Structure:
       [RankColumn, MinColumn, MaxColumn, MeanColumn, MedianColumn]
       public class StringOperationsBenchmarks
       {
-          private const string TestString = "Hello, World!";
-          private readonly StringBuilder _builder = new();
+          const string TestString = "Hello, World!";
+          readonly StringBuilder _builder = new();
           
           [Params(10, 100, 1000)]
           public int Iterations { get; set; }
@@ -114,7 +114,7 @@ Hardware Intrinsics:
       [RyuJitX64Job]
       public class VectorBenchmarks
       {
-          private float[] _data;
+          float[] _data;
           
           [GlobalSetup]
           public void Setup()
@@ -145,7 +145,7 @@ Async Performance:
       ```csharp
       public class AsyncBenchmarks
       {
-          private HttpClient _client;
+          HttpClient _client;
           
           [GlobalSetup]
           public void Setup()
@@ -213,7 +213,7 @@ Best Practices:
       }
       
       // Avoid: Shared state between iterations
-      private byte[] _sharedData = new byte[1024];  // Can lead to false results
+      byte[] _sharedData = new byte[1024];  // Can lead to false results
       ```
   - Use appropriate job configurations:
       ```csharp

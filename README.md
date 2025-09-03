@@ -4,7 +4,7 @@
 
 A comprehensive collection of Cursor AI assistant rules designed to enhance software development quality, consistency, and productivity. This project provides structured guidelines for various aspects of software development including coding standards, specification writing, package publishing, and tool management.
 
-**Sources:**
+**Some of these rules are derived from:**
 [.NET Cursor Rules by Aaronontheweb](https://github.com/Aaronontheweb/dotnet-cursor-rules)
 [Cursor Official Directory](https://cursor.directory/rules)
 

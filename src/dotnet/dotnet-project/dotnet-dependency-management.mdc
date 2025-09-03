@@ -1,6 +1,6 @@
 ---
 description: This file provides guidelines for safely managing NuGet package dependencies in .NET projects, focusing on security, licensing, and maintainability.
-globs: Directory.Packages.props,*.csproj,*.fsproj,Directory.Build.props,nuget.config
+globs: Directory.Packages.props, *.csproj, *.fsproj, Directory.Build.props, nuget.config
 alwaysApply: false
 ---
 
@@ -28,7 +28,7 @@ Package Installation:
       - Examples:
         ```bash
         # Add latest stable version
-        dotnet add package Newtonsoft.Json
+        dotnet add package Microsoft.Extensions.Logging
         
         # Add specific version
         dotnet add package Serilog -v 3.1.1
@@ -41,6 +41,40 @@ Package Installation:
       - Review package download statistics
       - Verify package authenticity (signed packages)
       - Consider package maintenance status
+
+Packages to Avoid:
+  - Legacy packages that have better modern alternatives:
+      - **Newtonsoft.Json**: Use System.Text.Json (built-in, faster, less memory usage)
+      - **EntityFramework (EF6)**: Use Entity Framework Core (cross-platform, better performance)
+      - **Microsoft.AspNet.WebApi.*****: Use ASP.NET Core Web API (unified framework)
+      - **System.Web.Mvc**: Use ASP.NET Core MVC (cross-platform, better performance)
+      - **Microsoft.Owin.*****: Use ASP.NET Core middleware (more efficient, better ecosystem)
+      - **Autofac.WebApi2**: Use built-in ASP.NET Core Dependency Injection
+      - **System.Net.Http.Formatting**: Use ASP.NET Core formatters
+      - **Microsoft.ApplicationInsights.Web**: Use Microsoft.ApplicationInsights.AspNetCore
+      - **log4net**: Consider Microsoft.Extensions.Logging or Serilog (better structured logging)
+      - **Common.Logging**: Use Microsoft.Extensions.Logging (standard .NET logging abstraction)
+
+  - Security and maintenance concerns:
+      - Packages with known vulnerabilities (check `dotnet list package --vulnerable`)
+      - Unmaintained packages (no updates for 2+ years)
+      - Packages with restrictive or unclear licenses
+      - Pre-release packages in production environments
+
+  - Performance considerations:
+      - Heavy packages when lightweight alternatives exist
+      - Packages that pull many transitive dependencies
+      - Packages that don't support nullable reference types
+      - Packages incompatible with AOT compilation (if using .NET 8+)
+
+<div style="background-color: #fff3cd; border-radius: 5px; padding: 15px; margin: 10px 0;">
+<strong>Migration Strategy:</strong><br/>
+When moving away from legacy packages:
+<br/>• Plan migrations during major version updates
+<br/>• Test thoroughly in non-production environments  
+<br/>• Update documentation and team knowledge
+<br/>• Consider gradual migration for large codebases
+</div>
 
 Check and Upgrade NuGet Packages:
 
