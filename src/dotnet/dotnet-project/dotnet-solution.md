@@ -73,13 +73,13 @@ predictable structure.
 │   ├── Directory.Build.props                         # (Required) Directory.Build.props for apps (inherits from root Directory.Build.props)
 │   ├── Some.AppA/                                    # Example application (here just for this structure example)
 │   │   ├── src/                                      # Source files for the application
-│   │   ├── app_icon.png                              # Project icon (bundled with the application)
+│   │   ├── project_icon.png                          # Project icon (bundled with the application)
 │   │   ├── README.md                                 # Readme markdown file with brief docs about the application
 │   │   ├── GlobalUsings.cs                           # Global usings file for the application with most common namespaces
 │   │   └── Some.AppA.csproj                          # Example application project file
 │   ├── Some.AppB/                                    # Example application (here just for this structure example)
 │   │    ├── src/                                     # Source files for the application
-│   │    ├── app_icon.png                             # Project icon (bundled with the application)
+│   │    ├── project_icon.png                         # Project icon (bundled with the application)
 │   │    ├── README.md                                # Readme markdown file with brief docs about the application
 │   │    ├── GlobalUsings.cs                          # Global usings file for the application with most common namespaces
 │   │    └── Some.AppB.csproj                         # Example application project file
@@ -89,13 +89,13 @@ predictable structure.
 │   ├── Directory.Build.targets                       # (Required) Directory.Build.targets just for libraries
 │   ├── Some.LibraryA/                                # Example library (here just for this structure example)
 │   │   ├── src/                                      # Source files for the library
-│   │   ├── package_icon.png                          # Project icon (bundled with the package)
+│   │   ├── project_icon.png                          # Project icon (bundled with the package)
 │   │   ├── README.md                                 # Readme markdown file with brief docs about the library
 │   │   ├── GlobalUsings.cs                           # Global usings file for the library with most common namespaces
 │   │   └── Some.LibraryA.csproj                      # Example library project file
 │   ├── Some.LibraryB/                                # Example library (here just for this structure example)
 │   │    ├── src/                                     # Source files for the library
-│   │    ├── package_icon.png                         # Project icon (bundled with the package)
+│   │    ├── project_icon.png                         # Project icon (bundled with the package)
 │   │    ├── README.md                                # Readme markdown file with brief docs about the library
 │   │    ├── GlobalUsings.cs                          # Global usings file for the library with most common namespaces
 │   │    └── Some.LibraryB.csproj                     # Example library project file
