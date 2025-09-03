@@ -4,21 +4,37 @@ globs: *.sln, *.slnx, global.json, ./Directory.Build.props, libs/Directory.Build
 alwaysApply: false
 ---
 
+# Cursor Rules File: Best Practices for .NET Solution Management
+
 Role Definition:
+
 - .NET Solution Architect
 - Build System Expert
 - Package Management Specialist
 
+## General
 
-# Cursor Rules File: Best Practices for .NET Solution Management
+### Description
+.NET solutions must be configured with explicit SDK versioning, shared build properties,
+and secure package sources to ensure consistency, maintainability, and security
+across all projects within the solution.
+
+### Requirements
+- Maintain a `global.json` for SDK version control
+- Use `Directory.Build.props` for shared metadata
+- Configure secure and reliable package sources in `nuget.config`
 
 
 ## Project Structure
 
 > [!IMPORTANT]
-> Don't create new files without first checking existing ones. Build system files should follow a consistent, predictable structure.
+> Don't create new files without first checking existing ones. Build system files should follow a consistent,
+predictable structure.
 
-### Files and Their Purposes. Required has an annotation (Required)
+### Files and Their Purposes
+> [!IMPORTANT]
+> Required files and directories have an annotation (Required).
+
 ```
 ├── Directory.Build.props                             # (Required) Master Directory.Build.props from which all other Directory.Build.props inherit.
 ├── global.json                                       # (Required) SDK version pinning
@@ -102,215 +118,211 @@ Role Definition:
 
 ### File Responsibilities
 
-#### Master Directory.Build.props in the Solution Root Directory
+### Master Directory.Build.props in the Solution Root Directory
+
 - Common build properties for all projects in the solution
 - Stylecop configuration
-- TreatWarningsAsErrors configuration 
+- TreatWarningsAsErrors configuration
 
 Example:
+
 ```xml
+
 <Project>
-  <PropertyGroup>
-    <VersionPrefix>1.0.0</VersionPrefix>
-    <PackageReleaseNotes><!-- Auto-updated by build.ps1 --></PackageReleaseNotes>
-    <Authors>Your Company</Authors>
-    <Copyright>© $([System.DateTime]::Now.Year) Your Company</Copyright>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/org/repo</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/org/repo.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-  </PropertyGroup>
-  
-  <!-- Package versions -->
-  <PropertyGroup>
-    <MicrosoftExtensionsVersion>8.0.0</MicrosoftExtensionsVersion>
-    <XunitVersion>2.7.0</XunitVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <PackageReleaseNotes><!-- Auto-updated by build.ps1 --></PackageReleaseNotes>
+        <Authors>Your Company</Authors>
+        <Copyright>© $([System.DateTime]::Now.Year) Your Company</Copyright>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/org/repo</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/org/repo.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
+
+    <!-- Package versions -->
+    <PropertyGroup>
+        <MicrosoftExtensionsVersion>8.0.0</MicrosoftExtensionsVersion>
+        <XunitVersion>2.7.0</XunitVersion>
+    </PropertyGroup>
 </Project>
 ```
 
-## General:
-  Description: >
-    .NET solutions must be configured with explicit SDK versioning, shared build properties,
-    and secure package sources to ensure consistency, maintainability, and security
-    across all projects within the solution.
+## Solution File Format
 
-  ### Requirements:
-  - Maintain a `global.json` for SDK version control
-  - Use `Directory.Build.props` for shared metadata
-  - Configure secure and reliable package sources in `nuget.config`
-
-  ### Solution File Format
-  - Prefer `.slnx` format over traditional .sln:
-    - `.slnx` is the modern XML-based solution format
-    - Better merge conflict resolution due to structured XML
-    - Improved tooling support in modern Visual Studio versions
-    - More maintainable and readable than the `.sln` format
-    - Migration from `.sln` to `.slnx`:
-        - Open existing `.sln` in Visual Studio 2022 17.4+
-        - Use "File > Save As" and select `.slnx` format
-        - Update CI/CD scripts to handle `.slnx` files
-        - Example dotnet CLI commands work with both formats:
-          ```bash
-          dotnet build MySolution.slnx
-          dotnet test MySolution.slnx
-          dotnet pack MySolution.slnx
-          ```
+- Prefer `.slnx` format over traditional .sln:
+  - `.slnx` is the modern XML-based solution format
+  - Better merge conflict resolution due to structured XML
+  - Improved tooling support in modern Visual Studio versions
+  - More maintainable and readable than the `.sln` format
+  - Migration from `.sln` to `.slnx`:
+    - Open existing `.sln` in Visual Studio 2022 17.4+
+    - Use "File > Save As" and select `.slnx` format
+    - Update CI/CD scripts to handle `.slnx` files
+    - Example dotnet CLI commands work with both formats:
+      ```bash
+      dotnet build MySolution.slnx
+      dotnet test MySolution.slnx
+      dotnet pack MySolution.slnx
+      ```
 
 ## SDK Version Management
-  - Maintain a `global.json` file in the solution root:
-      - Specify the exact SDK version to ensure consistent builds
-      - Include rollForward policy for patch version flexibility
-      - Example:
-        ```json
-        {
-          "sdk": {
-            "version": "10.0.100-preview.7",
-            "rollForward": "patch"
-          }
-        }
-        ```
-  - Update SDK versions through controlled processes:
-      - Test new SDK versions in development/CI before updating
-      - Document SDK version changes in source control
-      - Consider implications for CI/CD pipelines
+
+- Maintain a `global.json` file in the solution root:
+  - Specify the exact SDK version to ensure consistent builds
+  - Include rollForward policy for patch version flexibility
+  - Example:
+    ```json
+    {
+      "sdk": {
+        "version": "10.0.100-preview.7",
+        "rollForward": "patch"
+      }
+    }
+    ```
+- Update SDK versions through controlled processes:
+  - Test new SDK versions in development/CI before updating
+  - Document SDK version changes in source control
+  - Consider implications for CI/CD pipelines
 
 ## Shared Build Properties
-  - Implement Directory.Build.props in solution root:
-      - Define common metadata:
-          - Company/Author information
-          - Copyright details
-          - Project URL
-          - License information
-          - Version prefix/suffix strategy
-      - Example structure:
-        ```xml
-        <Project>
-          <PropertyGroup>
-            <Authors>Your Company</Authors>
-            <Company>Your Company</Company>
-            <Copyright>© $([System.DateTime]::Now.Year) Your Company</Copyright>
-            <PackageLicenseExpression>MIT</PackageLicenseExpression>
-            <PackageProjectUrl>https://github.com/your/project</PackageProjectUrl>
-            <VersionPrefix>1.0.0</VersionPrefix>
-          </PropertyGroup>
-        </Project>
-        ```
-  - Consider environment-specific overrides:
-      - Use Directory.Build.targets for overrides
-      - Support CI/CD pipeline customization
 
-## Package Management:
-  - Configure nuget.config:
-      - Use environment variables for security
-      - Support multiple package sources for different environments
-      - Clear default sources to ensure only configured sources are used
-      - Example company standard configuration:
-        ```xml
-        <?xml version="1.0" encoding="utf-8"?>
-        <!--
-            NuGet Configuration File for Six.SolutionTemplate
-            
-            This configuration file defines NuGet package sources and credentials for the solution template.
-            It supports four publishing scenarios:
-            1. Local Feed: Packages published to a local directory that serves as NuGet feed (for testing and similar)
-            2. Dev Feed: Packages published to a NuGet feed for development
-            3. Staging Feed: Packages published to a staging NuGet feed (pre-release versions and similar)
-            4. Production Feed: Packages published to production NuGet feed
-            
-            IMPORTANT: All values use environment variables. If you change the environment variable names,
-            you MUST also update the corresponding variables in build/nuget-pack.cs to maintain compatibility.
-            
-            IMPORTANT: If you don't need certain feeds (e.g., Local or Staging) and you didn't set environment
-            variables for them, you should remove them from this file or compiler will error if environment variables 
-            for them are missing/not set.
-            
-            Environment Variables Required:
-            - NUGET_FEED_LOCAL_URL: Path to local directory for development packages
-            - NUGET_FEED_DEV_URL: URL of development NuGet feed
-            - NUGET_FEED_DEV_USERNAME: Username for development feed authentication
-            - NUGET_FEED_DEV_PAT: Personal Access Token for development feed authentication
-            - NUGET_FEED_STAGING_URL: URL of staging NuGet feed
-            - NUGET_FEED_STAGING_USERNAME: Username for staging feed authentication
-            - NUGET_FEED_STAGING_PAT: Personal Access Token for staging feed authentication    
-            - NUGET_FEED_PRODUCTION_URL: URL of production NuGet feed (for public packages, typically https://api.nuget.org/v3/index.json)
-            - NUGET_FEED_PRODUCTION_USERNAME: Username for production feed authentication
-            - NUGET_FEED_PRODUCTION_PAT: Personal Access Token for production feed authentication    
-            
-            For detailed setup instructions see:
-            https://six-tech.github.io/Six.LibraryTemplate/nuget/nuget-secrets/
-            https://six-tech.github.io/Six.LibraryTemplate/nuget/nuget-feeds/
-        -->
+- Implement Directory.Build.props in solution root:
+  - Define common metadata:
+    - Company/Author information
+    - Copyright details
+    - Project URL
+    - License information
+    - Version prefix/suffix strategy
+  - Example structure:
+    ```xml
+    <Project>
+      <PropertyGroup>
+        <Authors>Your Company</Authors>
+        <Company>Your Company</Company>
+        <Copyright>© $([System.DateTime]::Now.Year) Your Company</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/your/project</PackageProjectUrl>
+        <VersionPrefix>1.0.0</VersionPrefix>
+      </PropertyGroup>
+    </Project>
+    ```
+- Consider environment-specific overrides:
+  - Use Directory.Build.targets for overrides
+  - Support CI/CD pipeline customization
 
-        <configuration>
-            <packageSources>
-                <!-- Remove default feeds to ensure only configured sources are used -->
-                <clear />
-                
-                <!-- 
-                    Local Feed (for local testing and similar)
-                    Environment Variable: NUGET_FEED_LOCAL_URL
-                    Purpose: Local directory for development and testing packages
-                    Example: C:\LocalNuGetFeed or /home/user/local-nuget-feed
-                -->
-                <add key="Local" value="%NUGET_FEED_LOCAL_URL%" />
+## Package Management
 
-                <!-- 
-                    Development Feed
-                    Environment Variable: NUGET_FEED_DEV_URL
-                    Purpose: Local directory for development and testing packages
-                    Example: C:\LocalNuGetFeed or /home/user/local-nuget-feed
-                -->
-                <add key="Development" value="%NUGET_FEED_DEV_URL%" />
+- Configure nuget.config:
+  - Use environment variables for security
+  - Support multiple package sources for different environments
+  - Clear default sources to ensure only configured sources are used
+  - Example company standard configuration:
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <!--
+        NuGet Configuration File for Six.SolutionTemplate
+        
+        This configuration file defines NuGet package sources and credentials for the solution template.
+        It supports four publishing scenarios:
+        1. Local Feed: Packages published to a local directory that serves as NuGet feed (for testing and similar)
+        2. Dev Feed: Packages published to a NuGet feed for development
+        3. Staging Feed: Packages published to a staging NuGet feed (pre-release versions and similar)
+        4. Production Feed: Packages published to production NuGet feed
+        
+        IMPORTANT: All values use environment variables. If you change the environment variable names,
+        you MUST also update the corresponding variables in build/nuget-pack.cs to maintain compatibility.
+        
+        IMPORTANT: If you don't need certain feeds (e.g., Local or Staging) and you didn't set environment
+        variables for them, you should remove them from this file or compiler will error if environment variables 
+        for them are missing/not set.
+        
+        Environment Variables Required:
+        - NUGET_FEED_LOCAL_URL: Path to local directory for development packages
+        - NUGET_FEED_DEV_URL: URL of development NuGet feed
+        - NUGET_FEED_DEV_USERNAME: Username for development feed authentication
+        - NUGET_FEED_DEV_PAT: Personal Access Token for development feed authentication
+        - NUGET_FEED_STAGING_URL: URL of staging NuGet feed
+        - NUGET_FEED_STAGING_USERNAME: Username for staging feed authentication
+        - NUGET_FEED_STAGING_PAT: Personal Access Token for staging feed authentication    
+        - NUGET_FEED_PRODUCTION_URL: URL of production NuGet feed (for public packages, typically https://api.nuget.org/v3/index.json)
+        - NUGET_FEED_PRODUCTION_USERNAME: Username for production feed authentication
+        - NUGET_FEED_PRODUCTION_PAT: Personal Access Token for production feed authentication    
+        
+        For detailed setup instructions see:
+        https://six-tech.github.io/Six.LibraryTemplate/nuget/nuget-secrets/
+        https://six-tech.github.io/Six.LibraryTemplate/nuget/nuget-feeds/
+    -->
 
-                <!-- 
-                    Staging Feed
-                    Environment Variable: NUGET_FEED_STAGING_URL
-                    Purpose: Private NuGet feed for internal or staging packages
-                    Example: https://nuget.pkg.github.com/YOUR_GITHUB_NAME/index.json
-                -->
-                <add key="Staging" value="%NUGET_FEED_STAGING_URL%" />
-                
-                <!-- 
-                    Public Feed (Production Releases)
-                    Environment Variable: NUGET_FEED_PRODUCTION_URL
-                    Purpose: For example, public NuGet.org feed for production releases
-                    Example: https://api.nuget.org/v3/index.json            
-                -->
-                <add key="Production" value="%NUGET_FEED_PRODUCTION_URL%" />
-
-            </packageSources>
+    <configuration>
+        <packageSources>
+            <!-- Remove default feeds to ensure only configured sources are used -->
+            <clear />
+            
+            <!-- 
+                Local Feed (for local testing and similar)
+                Environment Variable: NUGET_FEED_LOCAL_URL
+                Purpose: Local directory for development and testing packages
+                Example: C:\LocalNuGetFeed or /home/user/local-nuget-feed
+            -->
+            <add key="Local" value="%NUGET_FEED_LOCAL_URL%" />
 
             <!-- 
-                Package Source Credentials
-                API keys and usernames are stored as environment variables for security.
-                Never commit actual credentials to source control.
-                
-                WARNING: If you change these environment variable names, you MUST update
-                the corresponding variables in build/nuget-pack.cs to maintain functionality.
+                Development Feed
+                Environment Variable: NUGET_FEED_DEV_URL
+                Purpose: Local directory for development and testing packages
+                Example: C:\LocalNuGetFeed or /home/user/local-nuget-feed
             -->
-            <packageSourceCredentials>
-                <!-- Development Feed Credentials -->
-                <Development>
-                    <add key="Username" value="%NUGET_FEED_DEV_USERNAME%" />
-                    <add key="ClearTextPassword" value="%NUGET_FEED_DEV_PAT%" />
-                </Development>        
-                
-                <!-- Staging Feed Credentials -->
-                <Staging>
-                    <add key="Username" value="%NUGET_FEED_STAGING_USERNAME%" />
-                    <add key="ClearTextPassword" value="%NUGET_FEED_STAGING_PAT%" />
-                </Staging>
-                
-                <!-- Production Feed Credentials -->
-                <Production>
-                    <add key="Username" value="%NUGET_FEED_PRODUCTION_USERNAME%" />
-                    <add key="ClearTextPassword" value="%NUGET_FEED_PRODUCTION_PAT%" />
-                </Production>
-            </packageSourceCredentials>
-        </configuration>
-        ```
+            <add key="Development" value="%NUGET_FEED_DEV_URL%" />
+
+            <!-- 
+                Staging Feed
+                Environment Variable: NUGET_FEED_STAGING_URL
+                Purpose: Private NuGet feed for internal or staging packages
+                Example: https://nuget.pkg.github.com/YOUR_GITHUB_NAME/index.json
+            -->
+            <add key="Staging" value="%NUGET_FEED_STAGING_URL%" />
+            
+            <!-- 
+                Public Feed (Production Releases)
+                Environment Variable: NUGET_FEED_PRODUCTION_URL
+                Purpose: For example, public NuGet.org feed for production releases
+                Example: https://api.nuget.org/v3/index.json            
+            -->
+            <add key="Production" value="%NUGET_FEED_PRODUCTION_URL%" />
+
+        </packageSources>
+
+        <!-- 
+            Package Source Credentials
+            API keys and usernames are stored as environment variables for security.
+            Never commit actual credentials to source control.
+            
+            WARNING: If you change these environment variable names, you MUST update
+            the corresponding variables in build/nuget-pack.cs to maintain functionality.
+        -->
+        <packageSourceCredentials>
+            <!-- Development Feed Credentials -->
+            <Development>
+                <add key="Username" value="%NUGET_FEED_DEV_USERNAME%" />
+                <add key="ClearTextPassword" value="%NUGET_FEED_DEV_PAT%" />
+            </Development>        
+            
+            <!-- Staging Feed Credentials -->
+            <Staging>
+                <add key="Username" value="%NUGET_FEED_STAGING_USERNAME%" />
+                <add key="ClearTextPassword" value="%NUGET_FEED_STAGING_PAT%" />
+            </Staging>
+            
+            <!-- Production Feed Credentials -->
+            <Production>
+                <add key="Username" value="%NUGET_FEED_PRODUCTION_USERNAME%" />
+                <add key="ClearTextPassword" value="%NUGET_FEED_PRODUCTION_PAT%" />
+            </Production>
+        </packageSourceCredentials>
+    </configuration>
+    ```
 
 <div style="background-color: #fff3cd; border-radius: 5px; padding: 15px; margin: 10px 0;">
 <strong>Security Best Practices:</strong><br/>
@@ -322,74 +334,76 @@ Example:
 </div>
 
 ## Maintenance
-  - Regular auditing:
-      - Review SDK versions for security updates
-      - Validate package versions for vulnerabilities
-      - Update shared metadata as needed
-  - Version control:
-      - Commit all configuration files
-      - Document changes in commit messages
-      - Consider using git hooks for validation
+
+- Regular auditing:
+  - Review SDK versions for security updates
+  - Validate package versions for vulnerabilities
+  - Update shared metadata as needed
+- Version control:
+  - Commit all configuration files
+  - Document changes in commit messages
+  - Consider using git hooks for validation
 
 ## Compilation
-  - Use dotnet CLI for builds:
-      - Prefer `dotnet build` over IDE builds for consistency
-      - Use `dotnet build -c Release` for release builds
-      - Enable deterministic builds with `/p:ContinuousIntegrationBuild=true`
-  - Enforce code quality:
-      - Enable `TreatWarningsAsErrors` in Directory.Build.props:
-        ```xml
-        <PropertyGroup>
-          <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-          <!-- Optionally allow specific warnings -->
-          <WarningsNotAsErrors>CS1591</WarningsNotAsErrors>
-        </PropertyGroup>
-        ```
-      - Address warnings properly:
-          - Fix the underlying issue rather than suppressing
-          - Document any necessary warning suppressions
-          - Use `#pragma warning disable` sparingly and only with comments
-  - Build configuration:
-      - Use conditional compilation symbols purposefully
-      - Define debug/release-specific behavior clearly
-      - Example:
-        ```xml
-        <PropertyGroup>
-          <DefineConstants>TRACE</DefineConstants>
-          <DefineConstants Condition="'$(Configuration)'=='Debug'">$(DefineConstants);DEBUG</DefineConstants>
-        </PropertyGroup>
-        ```
-  - Performance:
-      - Enable incremental builds by default
-      - Use `dotnet build --no-incremental` only when needed
-      - Consider using Fast Up-to-Date Check:
-        ```xml
-        <PropertyGroup>
-          <DisableFastUpToDateCheck>false</DisableFastUpToDateCheck>
-        </PropertyGroup>
-        ```
-  - Build output:
-      - Set consistent output paths
-      - Configure deterministic output:
-        ```xml
-        <PropertyGroup>
-          <Deterministic>true</Deterministic>
-          <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
-        </PropertyGroup>
-        ```
-  - Error handling:
-      - Log build errors comprehensively
-      - Use MSBuild binary log for detailed diagnostics:
-        ```bash
-        dotnet build -bl:build.binlog
-        ```
-      - Configure error reporting in CI/CD:
-        ```yaml
-        - name: Build
-          run: dotnet build --configuration Release /p:ContinuousIntegrationBuild=true
-          env:
-            DOTNET_CLI_TELEMETRY_OPTOUT: 1
-            DOTNET_NOLOGO: 1
-        ```
+
+- Use dotnet CLI for builds:
+  - Prefer `dotnet build` over IDE builds for consistency
+  - Use `dotnet build -c Release` for release builds
+  - Enable deterministic builds with `/p:ContinuousIntegrationBuild=true`
+- Enforce code quality:
+  - Enable `TreatWarningsAsErrors` in Directory.Build.props:
+    ```xml
+    <PropertyGroup>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <!-- Optionally allow specific warnings -->
+      <WarningsNotAsErrors>CS1591</WarningsNotAsErrors>
+    </PropertyGroup>
+    ```
+  - Address warnings properly:
+    - Fix the underlying issue rather than suppressing
+    - Document any necessary warning suppressions
+    - Use `#pragma warning disable` sparingly and only with comments
+- Build configuration:
+  - Use conditional compilation symbols purposefully
+  - Define debug/release-specific behavior clearly
+  - Example:
+    ```xml
+    <PropertyGroup>
+      <DefineConstants>TRACE</DefineConstants>
+      <DefineConstants Condition="'$(Configuration)'=='Debug'">$(DefineConstants);DEBUG</DefineConstants>
+    </PropertyGroup>
+    ```
+- Performance:
+  - Enable incremental builds by default
+  - Use `dotnet build --no-incremental` only when needed
+  - Consider using Fast Up-to-Date Check:
+    ```xml
+    <PropertyGroup>
+      <DisableFastUpToDateCheck>false</DisableFastUpToDateCheck>
+    </PropertyGroup>
+    ```
+- Build output:
+  - Set consistent output paths
+  - Configure deterministic output:
+    ```xml
+    <PropertyGroup>
+      <Deterministic>true</Deterministic>
+      <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+    ```
+- Error handling:
+  - Log build errors comprehensively
+  - Use MSBuild binary log for detailed diagnostics:
+    ```bash
+    dotnet build -bl:build.binlog
+    ```
+  - Configure error reporting in CI/CD:
+    ```yaml
+    - name: Build
+      run: dotnet build --configuration Release /p:ContinuousIntegrationBuild=true
+      env:
+        DOTNET_CLI_TELEMETRY_OPTOUT: 1
+        DOTNET_NOLOGO: 1
+    ```
 
 # End of Cursor Rules File 

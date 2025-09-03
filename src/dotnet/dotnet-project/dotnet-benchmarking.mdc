@@ -3,9 +3,11 @@ description: Designing benchmarks for measuring .NET performance
 globs: Directory.Packages.props, *.csproj, *.cs
 alwaysApply: false
 ---
+
 # Cursor Rules File: .NET Benchmarking Best Practices
-# This file provides guidelines for writing effective benchmarks using BenchmarkDotNet
-# and other performance testing tools.
+
+This file provides guidelines for writing effective benchmarks using BenchmarkDotNet
+and other performance testing tools.
 
 Role Definition:
  - Performance Engineer
