@@ -865,3 +865,93 @@ Create PowerShell scripts only when you need to:
 6. Manage file system operations
 
 Otherwise, use `dotnet` CLI directly in your build pipeline. 
+
+
+### CI/CD Integration Examples
+
+#### GitHub Actions
+
+```yaml
+name: Build and Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        global-json-file: global.json
+    
+    - name: Restore dependencies
+      run: dotnet restore --verbosity normal
+    
+    - name: Build
+      run: |
+        dotnet build --configuration Release --no-restore \
+          /p:ContinuousIntegrationBuild=true \
+          /p:TreatWarningsAsErrors=true
+    
+    - name: Test
+      run: dotnet test --configuration Release --no-build --verbosity normal
+    
+    - name: Upload build logs
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-logs
+        path: '**/*.binlog'
+```
+
+#### Azure DevOps
+
+```yaml
+trigger:
+- main
+- develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  DOTNET_NOLOGO: '1'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Use .NET SDK from global.json'
+  inputs:
+    useGlobalJson: true
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore packages'
+  inputs:
+    command: 'restore'
+    verbosityRestore: 'Normal'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build solution'
+  inputs:
+    command: 'build'
+    arguments: |
+      --configuration $(buildConfiguration) 
+      --no-restore 
+      /p:ContinuousIntegrationBuild=true 
+      /p:TreatWarningsAsErrors=true
+    verbosityBuild: 'Normal'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run tests'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(buildConfiguration) --no-build'
+    verbosityTest: 'Normal'
+```
+
+
+# End of Cursor Rules File 

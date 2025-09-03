@@ -1,13 +1,12 @@
 ---
 description: This file provides guidelines for maintaining .NET solutions with consistent SDK versions, shared metadata, and more.
-globs: *.sln, *.slnx, global.json, ./Directory.Build.props, libs/Directory.Build.props, libs/Directory.Package.targets, libs/*.csproj, libs/*.fsproj
+globs: *.sln, *.slnx, global.json, ./Directory.Build.props, apps/Directory.Build.props, libs/Directory.Build.props, libs/Directory.Build.targets, tests/Directory.Build.props, tests/Directory.Build.targets, benchmarks/Directory.Build.props, libs/*.csproj, libs/*.fsproj
 alwaysApply: false
 ---
 
-# Cursor Rules File: Best Practices for .NET Solution Management
+# Cursor Rules File: Best Practices for .NET Solution Management based on Six.SolutionTemplate
 
-Role Definition:
-
+**Role Definition:**
 - .NET Solution Architect
 - Build System Expert
 - Package Management Specialist
@@ -19,21 +18,36 @@ Role Definition:
 and secure package sources to ensure consistency, maintainability, and security
 across all projects within the solution.
 
+Uses [Six.SolutionTemplate](https://github.com/six-tech/Six.SolutionTemplate) a GitHub template for .NET solutions. 
+
+**Six.SolutionTemplate** provides a solid foundation for maintainable .NET solutions with consistent SDK versions, shared metadata, AI
+IDEs integration (Cursor and Kiro), embedded documentation using `Astro.js` and `Starlight`, and more.
+
+Full documentation: [Six.SolutionTemplate](https://six-tech.github.io/Six.SolutionTemplate/)
+
+
 ### Requirements
 - Maintain a `global.json` for SDK version control
-- Use `Directory.Build.props` for shared metadata
+- Maintain master `Directory.Build.props` in solution root for common build properties
+- Use master `Directory.Build.props` in solution root when dealing with `libs/Directory.Build.props`, `tests/Directory.
+Build.props`, and `benchmarks/Directory.Build.props` 
 - Configure secure and reliable package sources in `nuget.config`
+- Write and maintain AGENTS.md for AI agents using `../documentation/agents-md.mdc` rules
+- Write and maintain README.md docs `../documentation/readme-md.mdc` rules
+- Prefer `.slnx` format over traditional `.sln`
 
 
-## Project Structure
+## Solution Structure
 
 > [!IMPORTANT]
-> Don't create new files without first checking existing ones. Build system files should follow a consistent,
+> 
+> **DO NOT create new files without first checking existing ones**. Build system files should follow a consistent,
 predictable structure.
 
-### Files and Their Purposes
+### File Structure and Hierarchy
 > [!IMPORTANT]
-> Required files and directories have an annotation (Required).
+> - Required files and directories have an annotation (Required).
+> - Each file and directory has a brief description for what it is used for.
 
 ```
 ├── Directory.Build.props                             # (Required) Master Directory.Build.props from which all other Directory.Build.props inherit.
@@ -118,8 +132,9 @@ predictable structure.
 
 ### File Responsibilities
 
-### Master Directory.Build.props in the Solution Root Directory
+#### Master Directory.Build.props in the Solution Root Directory
 
+- This is a **MASTER** `Directory.Build.props` file from which all other `Directory.Build.props` files inherit.
 - Common build properties for all projects in the solution
 - Stylecop configuration
 - TreatWarningsAsErrors configuration
@@ -127,283 +142,650 @@ predictable structure.
 Example:
 
 ```xml
-
+<!-- MASTER Directory.Build.props -->
+<!-- All other Directory.Build.props files inherit from this one -->
 <Project>
     <PropertyGroup>
-        <VersionPrefix>1.0.0</VersionPrefix>
-        <PackageReleaseNotes><!-- Auto-updated by build.ps1 --></PackageReleaseNotes>
-        <Authors>Your Company</Authors>
-        <Copyright>© $([System.DateTime]::Now.Year) Your Company</Copyright>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/org/repo</PackageProjectUrl>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryUrl>https://github.com/org/repo.git</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
+        <LangVersion>13</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <NoWarn>CS1591,CS0649,CS0169,CA1050,CA1822,CA2211,IDE1006,CS1574,CS1584,CS1581,CS1580,NU5104</NoWarn>
     </PropertyGroup>
 
-    <!-- Package versions -->
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.0"/>
+    </ItemGroup>
+
     <PropertyGroup>
-        <MicrosoftExtensionsVersion>8.0.0</MicrosoftExtensionsVersion>
-        <XunitVersion>2.7.0</XunitVersion>
+        <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory).ruleset</CodeAnalysisRuleSet>
+        <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AnalysisLevel>preview</AnalysisLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json"/>
+    </ItemGroup>
+
+</Project>
+```
+
+#### Directory.Build.props in apps/ Directory
+
+- Inherits from the master Directory.Build.props in solution root
+- Configures properties specific to application projects
+- Sets up application-specific package references and configurations
+- Defines output type and other application-related settings
+
+Example:
+
+```xml
+<!-- apps/Directory.Build.props -->
+<!-- Inherits from master Directory.Build.props -->
+<Project>
+    <Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
+    
+    <PropertyGroup>
+        <!-- Application-specific properties -->
+        <OutputType>Exe</OutputType>
+        <UseAppHost>true</UseAppHost>
+        <SelfContained>false</SelfContained>
+        
+        <!-- Application metadata -->
+        <Product>$(AssemblyName)</Product>
+        <Description>Application built with Six.SolutionTemplate</Description>
+        
+        <!-- Application-specific warnings to suppress -->
+        <NoWarn>$(NoWarn);CA1014;CA2007</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Common application dependencies -->
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />
+    </ItemGroup>
+</Project>
+```
+
+#### Directory.Build.props in libs/ Directory
+
+- Inherits from the master Directory.Build.props in solution root
+- Configures properties specific to library projects that can be packed as NuGet packages
+- Sets up packaging metadata and library-specific configurations
+- Defines common dependencies for libraries
+
+Example:
+
+```xml
+<!-- libs/Directory.Build.props -->
+<!-- Inherits from master Directory.Build.props -->
+<Project>
+    <Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
+    
+    <PropertyGroup>
+        <!-- Library-specific properties -->
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        
+        <!-- Package metadata -->
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>package_icon.png</PackageIcon>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageTags>dotnet;library;six</PackageTags>
+        
+        <!-- Source Link for debugging -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSourceRevisionInInformationalVersion>true</IncludeSourceRevisionInInformationalVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Package files -->
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+        <None Include="package_icon.png" Pack="true" PackagePath="\"/>
+        
+        <!-- Source Link -->
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.0" PrivateAssets="All"/>
+    </ItemGroup>
+</Project>
+```
+
+#### Directory.Build.props in tests/ Directory
+
+- Inherits from the master Directory.Build.props in solution root  
+- Configures properties specific to test projects
+- Sets up testing frameworks and test-specific configurations
+- Defines common test dependencies
+
+Example:
+
+```xml
+<!-- tests/Directory.Build.props -->
+<!-- Inherits from master Directory.Build.props -->
+<Project>
+    <Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
+    
+    <PropertyGroup>
+        <!-- Test-specific properties -->
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        
+        <!-- Test configuration -->
+        <CollectCoverage>true</CollectCoverage>
+        <CoverletOutputFormat>cobertura</CoverletOutputFormat>
+        <CoverletOutput>$(MSBuildProjectDirectory)/coverage/</CoverletOutput>
+        <Threshold>80</Threshold>
+        <ThresholdType>line</ThresholdType>
+        <ThresholdStat>total</ThresholdStat>
+        
+        <!-- Test-specific warnings to suppress -->
+        <NoWarn>$(NoWarn);CA1707;CA1062;CA2007</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Common test framework packages -->
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0" />
+        <PackageReference Include="FluentAssertions" Version="7.0.0" />
+        <PackageReference Include="AutoFixture" Version="5.0.0" />
+        <PackageReference Include="Moq" Version="4.20.72" />
+        
+        <!-- Code coverage -->
+        <PackageReference Include="coverlet.collector" Version="6.0.3" />
+        <PackageReference Include="coverlet.msbuild" Version="6.0.3" />
+    </ItemGroup>
+</Project>
+```
+
+#### Directory.Build.props in benchmarks/ Directory
+
+- Inherits from the master Directory.Build.props in solution root
+- Configures properties specific to benchmark projects  
+- Sets up BenchmarkDotNet and performance testing configurations
+- Defines benchmark-specific optimizations
+
+Example:
+
+```xml
+<!-- benchmarks/Directory.Build.props -->
+<!-- Inherits from master Directory.Build.props -->
+<Project>
+    <Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
+    
+    <PropertyGroup>
+        <!-- Benchmark-specific properties -->
+        <IsPackable>false</IsPackable>
+        <OutputType>Exe</OutputType>
+        
+        <!-- Performance optimizations -->
+        <Optimize>true</Optimize>
+        <DebugType>pdbonly</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        
+        <!-- Benchmark configuration -->
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+        <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+        
+        <!-- Benchmark-specific warnings to suppress -->
+        <NoWarn>$(NoWarn);CA1822;CA1806</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- BenchmarkDotNet packages -->
+        <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+        <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.14.0" Condition="'$(OS)' == 'Windows_NT'" />
+    </ItemGroup>
+</Project>
+```
+
+
+
+## SDK Version Management
+
+### global.json Configuration
+
+Maintain a `global.json` file in the solution root to ensure consistent builds across all environments:
+
+> [!IMPORTANT]
+> 
+> Without explicit SDK versioning, different developers and CI environments might use different .NET SDK versions, leading to inconsistent build results, unexpected breaking changes, or hard-to-reproduce issues.
+
+#### Recommended Configuration
+
+```json
+{
+  "sdk": {
+    "version": "10.0.100-preview.7",
+    "rollForward": "patch",
+    "allowPrerelease": true
+  }
+}
+```
+
+#### SDK Update Strategy
+
+1. **Regular Updates**: Update SDK versions quarterly or when security patches are released
+2. **Testing Process**: 
+   - Test new SDK versions in a feature branch first
+   - Run full test suite and verify builds work correctly
+   - Update CI/CD pipeline configurations if needed
+3. **Documentation**: Always document SDK version changes in commit messages and release notes
+4. **Rollback Plan**: Keep previous working SDK version documented for quick rollback if issues arise
+
+#### Example Update Workflow
+
+```bash
+# 1. Check current SDK version
+dotnet --version
+
+# 2. Update global.json to new SDK version
+# Edit global.json with new version
+
+# 3. Test the build
+dotnet clean
+dotnet restore
+dotnet build --configuration Release
+
+# 4. Run tests
+dotnet test --configuration Release --no-build
+
+# 5. Commit changes with clear message
+git add global.json
+git commit -m "chore: update .NET SDK to 10.0.100-preview.8
+
+- Updated from 10.0.100-preview.7 to 10.0.100-preview.8
+- Tested builds and tests pass
+- No breaking changes affecting current codebase"
+```
+
+## Shared Build Properties
+
+### Master Directory.Build.props Strategy
+
+The **master Directory.Build.props** serves as the foundation for all build configurations across your solution. It should contain properties that apply to **all** projects regardless of type (applications, libraries, tests, benchmarks).
+
+> [!TIP]
+> 
+> **Inheritance Hierarchy:** Master Directory.Build.props → Subdirectory Directory.Build.props → Individual Project Files
+>
+> Each level can override or extend properties from the previous level.
+
+### Essential Properties for Master Directory.Build.props
+
+```xml
+<Project>
+    <!-- Language and Framework Configuration -->
+    <PropertyGroup>
+        <LangVersion>13</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <!-- Solution-wide Metadata -->
+    <PropertyGroup>
+        <Authors>Your Company Name</Authors>
+        <Company>Your Company Name</Company>
+        <Copyright>© $([System.DateTime]::Now.Year) Your Company Name</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/your-org/your-repo</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/your-org/your-repo</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0</FileVersion>
+    </PropertyGroup>
+
+    <!-- Build Quality and Analysis -->
+    <PropertyGroup>
+        <AnalysisLevel>preview</AnalysisLevel>
+        <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory).ruleset</CodeAnalysisRuleSet>
+        <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+        <NoWarn>CS1591,CS0649,CS0169,CA1050,CA1822,CA2211,IDE1006,CS1574,CS1584,CS1581,CS1580,NU5104</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.0"/>
+    </ItemGroup>
+
+    <!--        
+        StyleCop: https://github.com/DotNetAnalyzers/StyleCopAnalyzers
+    -->
+    <PropertyGroup>
+        <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory).ruleset</CodeAnalysisRuleSet>
+        <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AnalysisLevel>preview</AnalysisLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json"/>
+    </ItemGroup>
+
+    <!-- Performance and Optimization -->
+    <PropertyGroup>
+        <Deterministic>true</Deterministic>
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true' or '$(TF_BUILD)' == 'true'">true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+</Project>
+```
+
+
+#### CI/CD Pipeline Integration
+
+```xml
+<!-- Example: Azure DevOps or GitHub Actions integration -->
+<PropertyGroup>    
+    <!-- Enable additional analysis in CI -->
+    <RunCodeAnalysis Condition="'$(TF_BUILD)' == 'true' or '$(GITHUB_ACTIONS)' == 'true'">true</RunCodeAnalysis>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+</PropertyGroup>
+```
+
+### Best Practices for Shared Properties
+
+1. **Keep it Minimal**: Only include properties that truly apply to ALL projects
+2. **Use Comments**: Document why each property group exists
+3. **Version Consistently**: Use MSBuild functions for dynamic versioning
+4. **Environment Variables**: Leverage environment variables for CI/CD integration
+5. **Override Capability**: Design for easy overrides in subdirectories
+6. **Performance**: Consider build performance impact of global analyzers and tools
+
+
+## Package Management with nuget.config
+- Configure and maintain `nuget.config`:
+- **DO NOT DELETE** comments from `nuget.config`. They are used to document the configuration. 
+- Use environment variables for security
+- Support multiple package sources for different environments
+- Clear default sources to ensure only configured sources are used
+
+### Example company standard configuration
+```xml
+  <?xml version="1.0" encoding="utf-8"?>
+  <!--
+      NuGet Configuration File for Six.SolutionTemplate
+    
+      This configuration file defines NuGet package sources and credentials for the solution template.
+      It supports four publishing scenarios:
+      1. Local Feed: Packages published to a local directory that serves as NuGet feed (for testing and similar)
+      2. Dev Feed: Packages published to a NuGet feed for development
+      3. Staging Feed: Packages published to a staging NuGet feed (pre-release versions and similar)
+      4. Production Feed: Packages published to production NuGet feed
+    
+      IMPORTANT: All values use environment variables. If you change the environment variable names,
+      you MUST also update the corresponding variables in build/nuget-pack.cs to maintain compatibility.
+    
+      IMPORTANT: If you don't need certain feeds (e.g., Local or Staging) and you didn't set environment
+      variables for them, you should remove them from this file or compiler will error if environment variables 
+      for them are missing/not set.
+    
+      Environment Variables Required:
+      - NUGET_FEED_LOCAL_URL: Path to local directory for development packages
+      - NUGET_FEED_DEV_URL: URL of development NuGet feed
+      - NUGET_FEED_DEV_USERNAME: Username for development feed authentication
+      - NUGET_FEED_DEV_PAT: Personal Access Token for development feed authentication
+      - NUGET_FEED_STAGING_URL: URL of staging NuGet feed
+      - NUGET_FEED_STAGING_USERNAME: Username for staging feed authentication
+      - NUGET_FEED_STAGING_PAT: Personal Access Token for staging feed authentication    
+      - NUGET_FEED_PRODUCTION_URL: URL of production NuGet feed (for public packages, typically https://api.nuget.org/v3/index.json)
+      - NUGET_FEED_PRODUCTION_USERNAME: Username for production feed authentication
+      - NUGET_FEED_PRODUCTION_PAT: Personal Access Token for production feed authentication    
+    
+      For detailed setup instructions see:
+      https://six-tech.github.io/Six.LibraryTemplate/nuget/nuget-secrets/
+      https://six-tech.github.io/Six.LibraryTemplate/nuget/nuget-feeds/
+  -->
+
+  <configuration>
+      <packageSources>
+          <!-- Remove default feeds to ensure only configured sources are used -->
+          <clear />
+        
+          <!-- 
+              Local Feed (for local testing and similar)
+              Environment Variable: NUGET_FEED_LOCAL_URL
+              Purpose: Local directory for development and testing packages
+              Example: C:\LocalNuGetFeed or /home/user/local-nuget-feed
+          -->
+          <add key="Local" value="%NUGET_FEED_LOCAL_URL%" />
+
+          <!-- 
+              Development Feed
+              Environment Variable: NUGET_FEED_DEV_URL
+              Purpose: Local directory for development and testing packages
+              Example: C:\LocalNuGetFeed or /home/user/local-nuget-feed
+          -->
+          <add key="Development" value="%NUGET_FEED_DEV_URL%" />
+
+          <!-- 
+              Staging Feed
+              Environment Variable: NUGET_FEED_STAGING_URL
+              Purpose: Private NuGet feed for internal or staging packages
+              Example: https://nuget.pkg.github.com/YOUR_GITHUB_NAME/index.json
+          -->
+          <add key="Staging" value="%NUGET_FEED_STAGING_URL%" />
+        
+          <!-- 
+              Public Feed (Production Releases)
+              Environment Variable: NUGET_FEED_PRODUCTION_URL
+              Purpose: For example, public NuGet.org feed for production releases
+              Example: https://api.nuget.org/v3/index.json            
+          -->
+          <add key="Production" value="%NUGET_FEED_PRODUCTION_URL%" />
+
+      </packageSources>
+
+      <!-- 
+          Package Source Credentials
+          API keys and usernames are stored as environment variables for security.
+          Never commit actual credentials to source control.
+        
+          WARNING: If you change these environment variable names, you MUST update
+          the corresponding variables in build/nuget-pack.cs to maintain functionality.
+      -->
+      <packageSourceCredentials>
+          <!-- Development Feed Credentials -->
+          <Development>
+              <add key="Username" value="%NUGET_FEED_DEV_USERNAME%" />
+              <add key="ClearTextPassword" value="%NUGET_FEED_DEV_PAT%" />
+          </Development>        
+        
+          <!-- Staging Feed Credentials -->
+          <Staging>
+              <add key="Username" value="%NUGET_FEED_STAGING_USERNAME%" />
+              <add key="ClearTextPassword" value="%NUGET_FEED_STAGING_PAT%" />
+          </Staging>
+        
+          <!-- Production Feed Credentials -->
+          <Production>
+              <add key="Username" value="%NUGET_FEED_PRODUCTION_USERNAME%" />
+              <add key="ClearTextPassword" value="%NUGET_FEED_PRODUCTION_PAT%" />
+          </Production>
+      </packageSourceCredentials>
+  </configuration>
+```
+
+> [!IMPORTANT] Security Best Practices for `nuget.config`:
+> 
+> - Always use environment variables for credentials, never hardcode them
+> - Use Personal Access Tokens (PAT) instead of passwords when possible
+> - Set appropriate permissions for each feed (read vs. read/write)
+> - Regularly rotate credentials and review access permissions
+> - Remove unused feeds from the configuration to reduce attack surface
+
+
+
+## Build and Compilation Strategy
+
+### Build Command Standards
+
+> [!TIP]
+> **Performance Tip:** Always use the .NET CLI for builds in CI/CD pipelines and team environments. IDE builds may have different configurations and cached state that can lead to inconsistent results.
+
+#### Standard Build Commands
+
+```bash
+# Development builds
+dotnet clean
+dotnet restore
+dotnet build
+
+# Release builds (for production)
+dotnet build --configuration Release --no-restore
+
+# CI/CD builds (deterministic and optimized)
+dotnet build --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
+
+# Full clean and rebuild
+dotnet clean && dotnet restore && dotnet build --configuration Release
+```
+
+#### Advanced Build Options
+
+```bash
+# Build with binary logging for troubleshooting
+dotnet build -bl:build.binlog --verbosity normal
+
+# Build specific project only
+dotnet build src/MyProject/MyProject.csproj --configuration Release
+
+# Build with custom properties
+dotnet build /p:Version=1.2.3-beta /p:TreatWarningsAsErrors=false
+
+# Multi-targeting build
+dotnet build --framework net8.0 --runtime win-x64
+```
+
+### Code Quality and Error Handling
+
+#### Warning and Error Configuration
+
+Configure comprehensive error handling in your master Directory.Build.props:
+
+```xml
+<Project>
+    <PropertyGroup>
+        <!-- Treat warnings as errors for quality enforcement -->
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <WarningsNotAsErrors />
+        
+        <!-- Suppress specific warnings globally (use sparingly) -->
+        <NoWarn>CS1591,CS0649,CS0169,CA1050,CA1822,CA2211,IDE1006</NoWarn>
+    </PropertyGroup>
+
+    <!-- In DEBUG: Enable all analyzers and set analysis level -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <AnalysisLevel>preview</AnalysisLevel>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
     </PropertyGroup>
 </Project>
 ```
 
-## Solution File Format
+#### Warning Suppression Best Practices
 
-- Prefer `.slnx` format over traditional .sln:
-  - `.slnx` is the modern XML-based solution format
-  - Better merge conflict resolution due to structured XML
-  - Improved tooling support in modern Visual Studio versions
-  - More maintainable and readable than the `.sln` format
-  - Migration from `.sln` to `.slnx`:
-    - Open existing `.sln` in Visual Studio 2022 17.4+
-    - Use "File > Save As" and select `.slnx` format
-    - Update CI/CD scripts to handle `.slnx` files
-    - Example dotnet CLI commands work with both formats:
-      ```bash
-      dotnet build MySolution.slnx
-      dotnet test MySolution.slnx
-      dotnet pack MySolution.slnx
-      ```
+1. **Fix First**: Always try to fix the underlying issue rather than suppress
+2. **Document Why**: If suppression is necessary, document the reason
+3. **Scope Narrowly**: Use `#pragma warning disable` at the smallest scope possible
+4. **Review Regularly**: Periodically review all suppressions to see if they're still needed
 
-## SDK Version Management
+```csharp
+// Good: Narrow scope with explanation
+#pragma warning disable CA1062 // Validate arguments of public methods
+public void ProcessData(string data)
+{
+    // Suppressed because data is validated by calling method's contract
+    var processed = data.ToUpper();
+#pragma warning restore CA1062
+}
 
-- Maintain a `global.json` file in the solution root:
-  - Specify the exact SDK version to ensure consistent builds
-  - Include rollForward policy for patch version flexibility
-  - Example:
-    ```json
-    {
-      "sdk": {
-        "version": "10.0.100-preview.7",
-        "rollForward": "patch"
-      }
-    }
-    ```
-- Update SDK versions through controlled processes:
-  - Test new SDK versions in development/CI before updating
-  - Document SDK version changes in source control
-  - Consider implications for CI/CD pipelines
+// Bad: Broad suppression without explanation
+#pragma warning disable CA1062
+```
 
-## Shared Build Properties
+### Build Performance Optimization
 
-- Implement Directory.Build.props in solution root:
-  - Define common metadata:
-    - Company/Author information
-    - Copyright details
-    - Project URL
-    - License information
-    - Version prefix/suffix strategy
-  - Example structure:
-    ```xml
-    <Project>
-      <PropertyGroup>
-        <Authors>Your Company</Authors>
-        <Company>Your Company</Company>
-        <Copyright>© $([System.DateTime]::Now.Year) Your Company</Copyright>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/your/project</PackageProjectUrl>
-        <VersionPrefix>1.0.0</VersionPrefix>
-      </PropertyGroup>
-    </Project>
-    ```
-- Consider environment-specific overrides:
-  - Use Directory.Build.targets for overrides
-  - Support CI/CD pipeline customization
+#### Incremental Builds
 
-## Package Management
+```xml
+<PropertyGroup>
+    <!-- Enable fast up-to-date check for better IDE performance -->
+    <DisableFastUpToDateCheck>false</DisableFastUpToDateCheck>
+    
+    <!-- Enable incremental builds -->
+    <UseSharedCompilation>true</UseSharedCompilation>
+    <BuildInParallel>true</BuildInParallel>
+    
+    <!-- Optimize for local development -->
+    <UseCommonOutputDirectory>true</UseCommonOutputDirectory>
+</PropertyGroup>
+```
 
-- Configure nuget.config:
-  - Use environment variables for security
-  - Support multiple package sources for different environments
-  - Clear default sources to ensure only configured sources are used
-  - Example company standard configuration:
-    ```xml
-    <?xml version="1.0" encoding="utf-8"?>
-    <!--
-        NuGet Configuration File for Six.SolutionTemplate
-        
-        This configuration file defines NuGet package sources and credentials for the solution template.
-        It supports four publishing scenarios:
-        1. Local Feed: Packages published to a local directory that serves as NuGet feed (for testing and similar)
-        2. Dev Feed: Packages published to a NuGet feed for development
-        3. Staging Feed: Packages published to a staging NuGet feed (pre-release versions and similar)
-        4. Production Feed: Packages published to production NuGet feed
-        
-        IMPORTANT: All values use environment variables. If you change the environment variable names,
-        you MUST also update the corresponding variables in build/nuget-pack.cs to maintain compatibility.
-        
-        IMPORTANT: If you don't need certain feeds (e.g., Local or Staging) and you didn't set environment
-        variables for them, you should remove them from this file or compiler will error if environment variables 
-        for them are missing/not set.
-        
-        Environment Variables Required:
-        - NUGET_FEED_LOCAL_URL: Path to local directory for development packages
-        - NUGET_FEED_DEV_URL: URL of development NuGet feed
-        - NUGET_FEED_DEV_USERNAME: Username for development feed authentication
-        - NUGET_FEED_DEV_PAT: Personal Access Token for development feed authentication
-        - NUGET_FEED_STAGING_URL: URL of staging NuGet feed
-        - NUGET_FEED_STAGING_USERNAME: Username for staging feed authentication
-        - NUGET_FEED_STAGING_PAT: Personal Access Token for staging feed authentication    
-        - NUGET_FEED_PRODUCTION_URL: URL of production NuGet feed (for public packages, typically https://api.nuget.org/v3/index.json)
-        - NUGET_FEED_PRODUCTION_USERNAME: Username for production feed authentication
-        - NUGET_FEED_PRODUCTION_PAT: Personal Access Token for production feed authentication    
-        
-        For detailed setup instructions see:
-        https://six-tech.github.io/Six.LibraryTemplate/nuget/nuget-secrets/
-        https://six-tech.github.io/Six.LibraryTemplate/nuget/nuget-feeds/
-    -->
+#### CI/CD Build Optimization
 
-    <configuration>
-        <packageSources>
-            <!-- Remove default feeds to ensure only configured sources are used -->
-            <clear />
-            
-            <!-- 
-                Local Feed (for local testing and similar)
-                Environment Variable: NUGET_FEED_LOCAL_URL
-                Purpose: Local directory for development and testing packages
-                Example: C:\LocalNuGetFeed or /home/user/local-nuget-feed
-            -->
-            <add key="Local" value="%NUGET_FEED_LOCAL_URL%" />
+```xml
+<PropertyGroup>
+    <!-- CI-specific optimizations -->
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true' or '$(GITHUB_ACTIONS)' == 'true' or '$(TF_BUILD)' == 'true'">true</ContinuousIntegrationBuild>
+    
+    <!-- Deterministic builds for reproducibility -->
+    <Deterministic>true</Deterministic>
+    <DeterministicSourcePaths>true</DeterministicSourcePaths>
+    
+    <!-- Disable features not needed in CI -->
+    <UseSharedCompilation>false</UseSharedCompilation>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+</PropertyGroup>
+```
 
-            <!-- 
-                Development Feed
-                Environment Variable: NUGET_FEED_DEV_URL
-                Purpose: Local directory for development and testing packages
-                Example: C:\LocalNuGetFeed or /home/user/local-nuget-feed
-            -->
-            <add key="Development" value="%NUGET_FEED_DEV_URL%" />
+### Troubleshooting Build Issues
 
-            <!-- 
-                Staging Feed
-                Environment Variable: NUGET_FEED_STAGING_URL
-                Purpose: Private NuGet feed for internal or staging packages
-                Example: https://nuget.pkg.github.com/YOUR_GITHUB_NAME/index.json
-            -->
-            <add key="Staging" value="%NUGET_FEED_STAGING_URL%" />
-            
-            <!-- 
-                Public Feed (Production Releases)
-                Environment Variable: NUGET_FEED_PRODUCTION_URL
-                Purpose: For example, public NuGet.org feed for production releases
-                Example: https://api.nuget.org/v3/index.json            
-            -->
-            <add key="Production" value="%NUGET_FEED_PRODUCTION_URL%" />
+#### Binary Logging
 
-        </packageSources>
+Enable detailed logging for complex build issues:
 
-        <!-- 
-            Package Source Credentials
-            API keys and usernames are stored as environment variables for security.
-            Never commit actual credentials to source control.
-            
-            WARNING: If you change these environment variable names, you MUST update
-            the corresponding variables in build/nuget-pack.cs to maintain functionality.
-        -->
-        <packageSourceCredentials>
-            <!-- Development Feed Credentials -->
-            <Development>
-                <add key="Username" value="%NUGET_FEED_DEV_USERNAME%" />
-                <add key="ClearTextPassword" value="%NUGET_FEED_DEV_PAT%" />
-            </Development>        
-            
-            <!-- Staging Feed Credentials -->
-            <Staging>
-                <add key="Username" value="%NUGET_FEED_STAGING_USERNAME%" />
-                <add key="ClearTextPassword" value="%NUGET_FEED_STAGING_PAT%" />
-            </Staging>
-            
-            <!-- Production Feed Credentials -->
-            <Production>
-                <add key="Username" value="%NUGET_FEED_PRODUCTION_USERNAME%" />
-                <add key="ClearTextPassword" value="%NUGET_FEED_PRODUCTION_PAT%" />
-            </Production>
-        </packageSourceCredentials>
-    </configuration>
-    ```
+```bash
+# Generate detailed build log
+dotnet build -bl:build.binlog --verbosity diagnostic
 
-<div style="background-color: #fff3cd; border-radius: 5px; padding: 15px; margin: 10px 0;">
-<strong>Security Best Practices:</strong><br/>
-• Always use environment variables for credentials, never hardcode them
-<br/>• Use Personal Access Tokens (PAT) instead of passwords when possible
-<br/>• Set appropriate permissions for each feed (read vs. read/write)
-<br/>• Regularly rotate credentials and review access permissions
-<br/>• Remove unused feeds from the configuration to reduce attack surface
-</div>
+# View the log with MSBuild Structured Log Viewer
+# Download from: https://msbuildlog.com/
+```
 
-## Maintenance
+#### Common Build Problems and Solutions
 
-- Regular auditing:
-  - Review SDK versions for security updates
-  - Validate package versions for vulnerabilities
-  - Update shared metadata as needed
-- Version control:
-  - Commit all configuration files
-  - Document changes in commit messages
-  - Consider using git hooks for validation
+1. **Package Version Conflicts**
+   ```bash
+   # Diagnose package conflicts
+   dotnet list package --include-transitive
+   dotnet list package --vulnerable
+   dotnet list package --deprecated
+   ```
 
-## Compilation
+2. **Assembly Loading Issues**
+   ```xml
+   <!-- Add assembly binding redirects if needed -->
+   <PropertyGroup>
+     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+   </PropertyGroup>
+   ```
 
-- Use dotnet CLI for builds:
-  - Prefer `dotnet build` over IDE builds for consistency
-  - Use `dotnet build -c Release` for release builds
-  - Enable deterministic builds with `/p:ContinuousIntegrationBuild=true`
-- Enforce code quality:
-  - Enable `TreatWarningsAsErrors` in Directory.Build.props:
-    ```xml
-    <PropertyGroup>
-      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-      <!-- Optionally allow specific warnings -->
-      <WarningsNotAsErrors>CS1591</WarningsNotAsErrors>
-    </PropertyGroup>
-    ```
-  - Address warnings properly:
-    - Fix the underlying issue rather than suppressing
-    - Document any necessary warning suppressions
-    - Use `#pragma warning disable` sparingly and only with comments
-- Build configuration:
-  - Use conditional compilation symbols purposefully
-  - Define debug/release-specific behavior clearly
-  - Example:
-    ```xml
-    <PropertyGroup>
-      <DefineConstants>TRACE</DefineConstants>
-      <DefineConstants Condition="'$(Configuration)'=='Debug'">$(DefineConstants);DEBUG</DefineConstants>
-    </PropertyGroup>
-    ```
-- Performance:
-  - Enable incremental builds by default
-  - Use `dotnet build --no-incremental` only when needed
-  - Consider using Fast Up-to-Date Check:
-    ```xml
-    <PropertyGroup>
-      <DisableFastUpToDateCheck>false</DisableFastUpToDateCheck>
-    </PropertyGroup>
-    ```
-- Build output:
-  - Set consistent output paths
-  - Configure deterministic output:
-    ```xml
-    <PropertyGroup>
-      <Deterministic>true</Deterministic>
-      <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
-    </PropertyGroup>
-    ```
-- Error handling:
-  - Log build errors comprehensively
-  - Use MSBuild binary log for detailed diagnostics:
-    ```bash
-    dotnet build -bl:build.binlog
-    ```
-  - Configure error reporting in CI/CD:
-    ```yaml
-    - name: Build
-      run: dotnet build --configuration Release /p:ContinuousIntegrationBuild=true
-      env:
-        DOTNET_CLI_TELEMETRY_OPTOUT: 1
-        DOTNET_NOLOGO: 1
-    ```
+3. **Multi-Targeting Issues**
+   ```xml
+   <!-- Handle framework-specific code -->
+   <PropertyGroup>
+     <DefineConstants Condition="'$(TargetFramework)' == 'net8.0'">$(DefineConstants);NET8_0_OR_GREATER</DefineConstants>
+   </PropertyGroup>
+   ```
+
 
 # End of Cursor Rules File 
