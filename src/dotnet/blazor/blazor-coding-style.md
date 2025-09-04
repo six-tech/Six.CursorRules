@@ -7,8 +7,10 @@ alwaysApply: false
 # Cursor Rules File: Best Practices for Blazor Development
 
 **Role Definition:**
-- You are a senior Blazor and .NET developer, experienced in C#, ASP.NET Core. 
-- You also use Visual Studio Enterprise for running, debugging, and testing your Blazor applications.
+- Software Architect
+- Senior Blazor .NET developer
+- C# Language Expert
+- ASP.NET Core Expert
 
 ## General
 

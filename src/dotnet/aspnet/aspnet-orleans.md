@@ -7,6 +7,7 @@ alwaysApply: false
 # Cursor Rules File: Microsoft Orleans Coding Style & Best Practices
 
 Role Definition:
+
 - Orleans Distributed Systems Expert
 - Performance Optimization Specialist
 - Grain Design Architect
@@ -15,110 +16,276 @@ Role Definition:
 ## 1. Overview & General Principles
 
 ### Core Philosophy
-Orleans applications should maximize scalability, reliability, and performance through proper grain design, efficient state management, and optimized communication patterns. Always prioritize distributed system best practices while maintaining developer productivity.
+
+Orleans applications should maximize scalability, reliability, and performance through proper grain design, efficient
+state management, and optimized communication patterns. Always prioritize distributed system best practices while
+maintaining developer productivity.
 
 ### Requirements
+
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
+
 - Design grains for high cohesion and loose coupling
 - Implement proper state persistence and recovery patterns
 - Use ValueTask for async grain methods to optimize performance
 - Follow Orleans naming conventions and patterns
 - Implement comprehensive error handling and resilience patterns
 - Use Orleans clustering and partitioning effectively
-- Monitor grain activation, deactivation, and performance metrics
 - Design for eventual consistency and distributed system constraints
 
 ## 2. Project Setup & Configuration
 
-### Orleans Package Dependencies
-Always include the essential Orleans packages with proper versioning:
+### Orleans Package Dependencies with .NET Aspire
+
+Include essential Orleans packages and Aspire components for orchestration:
 
 ```xml
-<PackageReference Include="Microsoft.Orleans.Server" Version="9.1.2" />
-<PackageReference Include="Microsoft.Orleans.Client" Version="9.1.2" />
-<PackageReference Include="Microsoft.Orleans.Persistence.AdoNet" Version="9.1.2" />
-<PackageReference Include="Microsoft.Orleans.Clustering.AdoNet" Version="9.1.2" />
-<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
-<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+<!-- Core Orleans packages -->
+<PackageReference Include="Microsoft.Orleans.Server" Version="9.1.2"/>
+<PackageReference Include="Microsoft.Orleans.Client" Version="9.1.2"/>
+<PackageReference Include="Aspire.Microsoft.Extensions.Hosting" Version="9.0.0"/>
+<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0"/>
+
+<!-- Aspire Orleans integration -->
+<PackageReference Include="Aspire.Orleans.Server" Version="9.0.0"/>
+<PackageReference Include="Aspire.Orleans.Client" Version="9.0.0"/>
+
+<!-- Optional packages for storage (prefer Aspire-managed services for better local dev) -->
+<PackageReference Include="Aspire.Azure.Storage.Blobs" Version="9.0.0"/>
+<PackageReference Include="Aspire.MongoDB.Driver" Version="9.0.0"/>
+<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0"/>
 ```
 
-### Silo Configuration
-Configure Orleans silo with optimal settings for production:
+### Silo Configuration with .NET Aspire
+
+Configure the Orleans silo using Aspire's service orchestration:
 
 ```csharp
-// Program.cs - Silo Configuration
+// OrleansSilo/Program.cs - Aspire-managed Orleans Silo
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseOrleans(siloBuilder =>
-{
-    // Clustering configuration
-    siloBuilder.UseAdoNetClustering(options =>
-    {
-        options.Invariant = "System.Data.SqlClient";
-        options.ConnectionString = builder.Configuration.GetConnectionString("Orleans");
-    });
+// Add Aspire service defaults & health checks
+builder.AddServiceDefaults();
 
-    // Grain storage
-    siloBuilder.AddAdoNetGrainStorage("Default", options =>
-    {
-        options.Invariant = "System.Data.SqlClient";
-        options.ConnectionString = builder.Configuration.GetConnectionString("Orleans");
-    });
+// Configure Orleans silo with Aspire orchestration
+builder.UseOrleans(orleansBuilder =>
+{
+    // Aspire-managed clustering (automatic service discovery)
+    orleansBuilder.UseAspireClustering();
+
+    // Aspire-managed grain storage (Azure Storage, MongoDB, etc.)
+    orleansBuilder.AddAspireGrainStorage("MyGrainStorage");
 
     // Performance optimizations
-    siloBuilder.Configure<GrainCollectionOptions>(options =>
+    orleansBuilder.Configure<GrainCollectionOptions>(options =>
     {
         options.CollectionQuantum = TimeSpan.FromMinutes(1);
         options.DeactivationTimeout = TimeSpan.FromMinutes(2);
     });
 
     // Load balancing
-    siloBuilder.Configure<LoadSheddingOptions>(options =>
+    orleansBuilder.Configure<LoadSheddingOptions>(options =>
     {
         options.LoadSheddingEnabled = true;
         options.LoadSheddingLimit = 95;
     });
 });
 
-// Add services
-builder.Services.AddOrleansClient(clientBuilder =>
-{
-    clientBuilder.UseStaticClustering(new IPEndPoint(IPAddress.Loopback, 30000));
-});
-
 var app = builder.Build();
+
+// Map Aspire endpoints (health checks, metrics, etc.)
+app.MapDefaultEndpoints();
+
+app.Run();
 ```
 
-### Client Configuration
-Configure Orleans client for optimal performance:
+### AppHost Configuration (.NET Aspire)
+
+Set up your AppHost project to orchestrate Orleans services:
 
 ```csharp
-// Client configuration
-var client = new ClientBuilder()
-    .UseAdoNetClustering(options =>
+// AspireApp.AppHost/Program.cs
+var builder = DistributedApplication.CreateBuilder(args);
+
+// Add Orleans silo with scaling
+var orleansSilo = builder.AddProject<Projects.OrleansSilo>("orleans-silo")
+    .WithReplicas(2); // Scale to multiple silo instances
+
+// Add Orleans client service
+var orleansClient = builder.AddProject<Projects.OrleansClient>("orleans-client")
+    .WithReference(orleansSilo); // Automatic service discovery
+
+// Add storage resources (managed by Aspire)
+var storage = builder.AddAzureStorage("storage");
+var blobs = storage.AddBlobs("blobstorage");
+var tables = storage.AddTables("tablestorage");
+
+// Add database for Orleans clustering/storage
+var sql = builder.AddSqlServer("sql")
+    .WithLifetime(ContainerLifetime.Persistent);
+
+var orleansDb = sql.AddDatabase("orleans-db");
+
+// Configure Orleans services
+orleansSilo.AddAzureStorage(storage)
+           .WithReference(orleansDb);
+
+builder.Build().Run();
+```
+
+### Local Development with Aspire Dashboard
+
+Start your entire application stack with Aspire's orchestration:
+
+```bash
+# Run the AppHost to start all services
+dotnet run --project AspireApp.AppHost
+
+# This automatically starts:
+# - Aspire Dashboard (http://localhost:15888)
+# - Orleans Silo(s) with clustering
+# - Orleans Client service
+# - Azure Storage emulator
+# - SQL Server container
+# - Health monitoring and metrics
+```
+
+### Environment-Specific Configuration
+
+Configure Orleans differently per environment using Aspire:
+
+```csharp
+// OrleansSilo/Program.cs - Environment-aware configuration
+builder.UseOrleans(orleansBuilder =>
+{
+    // Clustering based on environment
+    if (builder.Environment.IsDevelopment())
     {
-        options.Invariant = "System.Data.SqlClient";
-        options.ConnectionString = connectionString;
-    })
-    .Configure<ClusterOptions>(options =>
+        // Use local clustering for development
+        orleansBuilder.UseLocalhostClustering();
+    }
+    else
     {
-        options.ClusterId = "dev";
+        // Use Aspire-managed clustering for staging/production
+        orleansBuilder.UseAspireClustering();
+    }
+
+    // Storage based on environment
+    if (builder.Environment.IsDevelopment())
+    {
+        // Use in-memory storage for faster development
+        orleansBuilder.AddMemoryGrainStorage("MyMemoryStorage");
+    }
+    else
+    {
+        // Use Aspire-managed storage for persistence
+        orleansBuilder.AddAspireGrainStorage("MyPersistentStorage");
+    }
+});
+```
+
+### Client Configuration with .NET Aspire
+
+Configure Orleans client using Aspire's automatic service discovery:
+
+```csharp
+// OrleansClient/Program.cs - Aspire-managed Orleans Client
+var builder = WebApplication.CreateBuilder(args);
+
+// Add Aspire service defaults & health checks
+builder.AddServiceDefaults();
+
+// Configure Orleans client with Aspire service discovery
+builder.UseOrleansClient(clientBuilder =>
+{
+    // Aspire-managed clustering (automatic service discovery)
+    clientBuilder.UseAspireClustering();
+
+    clientBuilder.Configure<ClusterOptions>(options =>
+    {
+        options.ClusterId = "aspire-dev";
         options.ServiceId = "OrleansApp";
-    })
-    .Configure<ClientMessagingOptions>(options =>
+    });
+
+    clientBuilder.Configure<ClientMessagingOptions>(options =>
     {
         options.ResponseTimeout = TimeSpan.FromSeconds(30);
         options.MaxMessageLength = 10 * 1024 * 1024; // 10MB
-    })
-    .AddSimpleMessageStreamProvider("SMS")
-    .Build();
+    });
 
-await client.Connect();
+    clientBuilder.AddSimpleMessageStreamProvider("SMS");
+});
+
+var app = builder.Build();
+
+// Map Aspire endpoints (health checks, metrics, etc.)
+app.MapDefaultEndpoints();
+
+// Example: Use Orleans grains in your API endpoints
+app.MapGet("/users/{id}", async (string id, IGrainFactory grainFactory) =>
+{
+    var userGrain = grainFactory.GetGrain<IUserGrain>(id);
+    var profile = await userGrain.GetProfileAsync();
+    return Results.Ok(profile);
+});
+
+app.Run();
+```
+
+### Aspire Service Communication
+
+Communicate between Aspire services using Orleans grains:
+
+```csharp
+// Example: API service communicating with Orleans silo
+public class WeatherApiService
+{
+    private readonly IGrainFactory _grainFactory;
+
+    public WeatherApiService(IGrainFactory grainFactory)
+    {
+        _grainFactory = grainFactory;
+    }
+
+    public async Task<WeatherData> GetWeatherAsync(string location)
+    {
+        // Get grain reference (Aspire handles service discovery)
+        var weatherGrain = _grainFactory.GetGrain<IWeatherGrain>(location);
+
+        // Call grain method
+        return await weatherGrain.GetCurrentWeatherAsync();
+    }
+}
+```
+
+### Service Reference Configuration
+
+Configure service references in AppHost for proper communication:
+
+```csharp
+// AspireApp.AppHost/Program.cs - Service communication setup
+var builder = DistributedApplication.CreateBuilder(args);
+
+// Add API service that depends on Orleans
+var apiService = builder.AddProject<Projects.WeatherApi>("weather-api")
+    .WithReference(orleansSilo) // Automatic service discovery
+    .WithReference(orleansClient); // If needed
+
+// Add Orleans silo
+var orleansSilo = builder.AddProject<Projects.OrleansSilo>("orleans-silo")
+    .WithReplicas(2);
+
+// Add Orleans client service
+var orleansClient = builder.AddProject<Projects.OrleansClient>("orleans-client")
+    .WithReference(orleansSilo);
+
+builder.Build().Run();
 ```
 
 ## 3. Grain Design & Architecture
 
 ### Grain Interface Design
+
 Design grain interfaces for clarity and performance:
 
 ```csharp
@@ -144,17 +311,18 @@ public interface IUserGrain : IGrainWithStringKey
 ```
 
 ### Grain Implementation Patterns
+
 Implement grains with proper lifecycle management:
 
 ```csharp
 // ✅ GOOD: Proper grain implementation with lifecycle
 public sealed class UserGrain : Grain, IUserGrain
 {
-    private readonly IPersistentState<UserProfile> _profile;
-    private readonly ILogger<UserGrain> _logger;
+    readonly IPersistentState<UserProfile> _profile;
+    readonly ILogger<UserGrain> _logger;
 
     public UserGrain(
-        [PersistentState("profile", "Default")] IPersistentState<UserProfile> profile,
+        [PersistentState("profile", "UserProfileStorage")] IPersistentState<UserProfile> profile,
         ILogger<UserGrain> logger)
     {
         _profile = profile;
@@ -203,7 +371,8 @@ public sealed class UserGrain : Grain, IUserGrain
 ```
 
 ### Grain Key Strategies
-Choose appropriate grain key types based on use case:
+
+Choose appropriate grain key types based on the use case:
 
 ```csharp
 // ✅ GOOD: Different key types for different scenarios
@@ -222,17 +391,18 @@ public interface IUserDeviceGrain : IGrainWith<UserDeviceKey> { }
 ## 4. State Management & Persistence
 
 ### Persistent State Patterns
+
 Implement efficient state management with proper error handling:
 
 ```csharp
 // ✅ GOOD: Robust state management with error handling
 public sealed class OrderGrain : Grain, IOrderGrain
 {
-    private readonly IPersistentState<OrderState> _state;
-    private readonly ILogger<OrderGrain> _logger;
+    readonly IPersistentState<OrderState> _state;
+    readonly ILogger<OrderGrain> _logger;
 
     public OrderGrain(
-        [PersistentState("order", "Default")] IPersistentState<OrderState> state,
+        [PersistentState("order", "OrderStorage")] IPersistentState<OrderState> state,
         ILogger<OrderGrain> logger)
     {
         _state = state;
@@ -275,6 +445,7 @@ public sealed class OrderGrain : Grain, IOrderGrain
 ```
 
 ### State Versioning & Migration
+
 Handle state schema changes gracefully:
 
 ```csharp
@@ -301,9 +472,9 @@ public sealed class OrderStateV2
 
 public sealed class OrderGrain : Grain, IOrderGrain
 {
-    private readonly IPersistentState<OrderStateV2> _state;
+    readonly IPersistentState<OrderStateV2> _state;
 
-    public OrderGrain([PersistentState("order", "Default")] IPersistentState<OrderStateV2> state)
+    public OrderGrain([PersistentState("order", "OrderStorage")] IPersistentState<OrderStateV2> state)
     {
         _state = state;
     }
@@ -324,15 +495,16 @@ public sealed class OrderGrain : Grain, IOrderGrain
 ```
 
 ### Memory Optimization
+
 Use memory-efficient patterns for large state objects:
 
 ```csharp
 // ✅ GOOD: Memory-efficient state handling
 public sealed class LargeDataGrain : Grain, ILargeDataGrain
 {
-    private readonly IPersistentState<LargeDataState> _state;
+    readonly IPersistentState<LargeDataState> _state;
 
-    public LargeDataGrain([PersistentState("large", "Default")] IPersistentState<LargeDataState> state)
+    public LargeDataGrain([PersistentState("large", "LargeDataStorage")] IPersistentState<LargeDataState> state)
     {
         _state = state;
     }
@@ -367,6 +539,7 @@ public sealed class LargeDataGrain : Grain, ILargeDataGrain
 ## 5. Communication Patterns
 
 ### Request-Response Patterns
+
 Use ValueTask for optimal performance in grain communications:
 
 ```csharp
@@ -410,6 +583,7 @@ public sealed class BatchGrain : Grain, IBatchGrain
 ```
 
 ### Event-Driven Communication
+
 Implement pub/sub patterns with streams:
 
 ```csharp
@@ -423,8 +597,8 @@ public interface INotificationGrain : IGrainWithStringKey
 
 public sealed class NotificationGrain : Grain, INotificationGrain
 {
-    private readonly IStreamProvider _streamProvider;
-    private IAsyncStream<string>? _stream;
+    readonly IStreamProvider _streamProvider;
+    IAsyncStream<string>? _stream;
 
     public NotificationGrain(IStreamProvider streamProvider)
     {
@@ -459,14 +633,15 @@ public sealed class NotificationGrain : Grain, INotificationGrain
 ```
 
 ### Cross-Grain Communication
+
 Implement efficient cross-grain communication patterns:
 
 ```csharp
 // ✅ GOOD: Efficient cross-grain communication
 public sealed class OrderProcessorGrain : Grain, IOrderProcessorGrain
 {
-    private readonly IGrainFactory _grainFactory;
-    private readonly ILogger<OrderProcessorGrain> _logger;
+    readonly IGrainFactory _grainFactory;
+    readonly ILogger<OrderProcessorGrain> _logger;
 
     public OrderProcessorGrain(IGrainFactory grainFactory, ILogger<OrderProcessorGrain> logger)
     {
@@ -498,18 +673,19 @@ public sealed class OrderProcessorGrain : Grain, IOrderProcessorGrain
 ## 6. Performance Optimization
 
 ### Grain Activation Management
+
 Optimize grain lifecycle for performance:
 
 ```csharp
 // ✅ GOOD: Smart grain activation patterns
 public sealed class CacheGrain : Grain, ICacheGrain
 {
-    private readonly IPersistentState<CacheState> _state;
-    private readonly IGrainActivationContext _context;
-    private DateTime _lastAccess;
+    readonly IPersistentState<CacheState> _state;
+    readonly IGrainActivationContext _context;
+    DateTime _lastAccess;
 
     public CacheGrain(
-        [PersistentState("cache", "Default")] IPersistentState<CacheState> state,
+        [PersistentState("cache", "CacheStorage")] IPersistentState<CacheState> state,
         IGrainActivationContext context)
     {
         _state = state;
@@ -561,15 +737,16 @@ public sealed class CacheGrain : Grain, ICacheGrain
 ```
 
 ### Memory and Resource Management
+
 Implement efficient resource usage patterns:
 
 ```csharp
 // ✅ GOOD: Memory-efficient grain patterns
 public sealed class StreamingGrain : Grain, IStreamingGrain
 {
-    private readonly ILogger<StreamingGrain> _logger;
-    private readonly SemaphoreSlim _processingSemaphore = new(1, 1);
-    private CancellationTokenSource? _processingCts;
+    readonly ILogger<StreamingGrain> _logger;
+    readonly SemaphoreSlim _processingSemaphore = new(1, 1);
+    CancellationTokenSource? _processingCts;
 
     public StreamingGrain(ILogger<StreamingGrain> logger)
     {
@@ -630,14 +807,15 @@ public sealed class StreamingGrain : Grain, IStreamingGrain
 ```
 
 ### Concurrent Processing Optimization
+
 Handle concurrent requests efficiently:
 
 ```csharp
 // ✅ GOOD: Concurrent processing with proper synchronization
 public sealed class ConcurrentGrain : Grain, IConcurrentGrain
 {
-    private readonly SemaphoreSlim _semaphore = new(3, 3); // Allow 3 concurrent operations
-    private readonly ConcurrentDictionary<string, TaskCompletionSource<bool>> _pendingOperations = new();
+    readonly SemaphoreSlim _semaphore = new(3, 3); // Allow 3 concurrent operations
+    readonly ConcurrentDictionary<string, TaskCompletionSource<bool>> _pendingOperations = new();
 
     public async ValueTask ProcessAsync(string operationId, Func<Task> operation)
     {
@@ -677,15 +855,16 @@ public sealed class ConcurrentGrain : Grain, IConcurrentGrain
 ## 7. Error Handling & Resilience
 
 ### Grain-Level Error Handling
+
 Implement comprehensive error handling patterns:
 
 ```csharp
 // ✅ GOOD: Comprehensive error handling in grains
 public sealed class ResilientGrain : Grain, IResilientGrain
 {
-    private readonly ILogger<ResilientGrain> _logger;
-    private readonly IGrainFactory _grainFactory;
-    private int _retryCount;
+    readonly ILogger<ResilientGrain> _logger;
+    readonly IGrainFactory _grainFactory;
+    int _retryCount;
 
     public ResilientGrain(IGrainFactory grainFactory, ILogger<ResilientGrain> logger)
     {
@@ -748,6 +927,7 @@ public sealed class ResilientGrain : Grain, IResilientGrain
 ```
 
 ### Exception Propagation
+
 Design exceptions that work well in distributed systems:
 
 ```csharp
@@ -794,14 +974,15 @@ public readonly record struct OperationResult
 ## 8. Testing Patterns
 
 ### Unit Testing Grains
+
 Test grains with proper mocking and isolation:
 
 ```csharp
 // ✅ GOOD: Comprehensive grain testing
 public class UserGrainTests
 {
-    private readonly Mock<IPersistentState<UserProfile>> _mockState = new();
-    private readonly Mock<ILogger<UserGrain>> _mockLogger = new();
+    readonly Mock<IPersistentState<UserProfile>> _mockState = new();
+    readonly Mock<ILogger<UserGrain>> _mockLogger = new();
 
     [Fact]
     public async Task GetProfileAsync_WhenUserExists_ReturnsProfile()
@@ -835,14 +1016,15 @@ public class UserGrainTests
 ```
 
 ### Integration Testing
+
 Test grain interactions and persistence:
 
 ```csharp
 // ✅ GOOD: Integration testing with Orleans test cluster
 public class OrleansIntegrationTests : IAsyncLifetime
 {
-    private TestCluster? _cluster;
-    private IClusterClient? _client;
+    TestCluster? _cluster;
+    IClusterClient? _client;
 
     public async Task InitializeAsync()
     {
@@ -881,12 +1063,12 @@ public class OrleansIntegrationTests : IAsyncLifetime
         Assert.Equal(profile.Name, retrievedProfile.Name);
     }
 
-    private class SiloConfigurator : ISiloConfigurator
+    class SiloConfigurator : ISiloConfigurator
     {
         public void Configure(ISiloBuilder siloBuilder)
         {
             siloBuilder
-                .AddMemoryGrainStorage("Default")
+                .AddMemoryGrainStorage("TestStorage")
                 .ConfigureServices(services =>
                 {
                     // Configure test services
@@ -894,7 +1076,7 @@ public class OrleansIntegrationTests : IAsyncLifetime
         }
     }
 
-    private class ClientConfigurator : IClientBuilderConfigurator
+    class ClientConfigurator : IClientBuilderConfigurator
     {
         public void Configure(IConfiguration configuration, IClientBuilder clientBuilder)
         {
@@ -906,69 +1088,202 @@ public class OrleansIntegrationTests : IAsyncLifetime
 
 ## 9. Deployment & Monitoring
 
-### Health Checks
-Implement comprehensive health monitoring:
+### Health Checks with .NET Aspire
+
+Aspire provides automatic health monitoring and integrates with the dashboard:
 
 ```csharp
-// ✅ GOOD: Health checks for Orleans silos
-public sealed class OrleansHealthCheck : IHealthCheck
-{
-    private readonly IClusterClient _client;
-    private readonly ILogger<OrleansHealthCheck> _logger;
+// OrleansSilo/Program.cs - Aspire health checks are automatic
+var builder = WebApplication.CreateBuilder(args);
 
-    public OrleansHealthCheck(IClusterClient client, ILogger<OrleansHealthCheck> logger)
+// Add Aspire service defaults (includes health checks)
+builder.AddServiceDefaults();
+
+// Configure Orleans silo
+builder.UseOrleans(orleansBuilder =>
+{
+    // Orleans configuration...
+});
+
+var app = builder.Build();
+
+// Map default endpoints (includes health checks at /health)
+app.MapDefaultEndpoints();
+
+// Optional: Add custom Orleans health checks
+app.MapHealthChecks("/health/orleans", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
+});
+
+app.Run();
+```
+
+### Aspire Dashboard Health Monitoring
+
+Monitor Orleans health through the Aspire dashboard:
+
+```csharp
+// OrleansSilo/Program.cs - Add detailed health reporting
+builder.Services.AddHealthChecks()
+    .AddCheck<OrleansClusterHealthCheck>("orleans-cluster")
+    .AddCheck<OrleansGrainHealthCheck>("orleans-grains");
+
+public sealed class OrleansClusterHealthCheck : IHealthCheck
+{
+    readonly IClusterClient _client;
+
+    public OrleansClusterHealthCheck(IClusterClient client)
     {
         _client = client;
-        _logger = logger;
     }
 
-    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken token = default)
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken token)
     {
         try
         {
-            // Test cluster connectivity
             var managementGrain = _client.GetGrain<IManagementGrain>(0);
             var hosts = await managementGrain.GetHosts();
 
-            if (!hosts.Any())
-                return HealthCheckResult.Unhealthy("No Orleans silos found");
+            var data = new Dictionary<string, object>
+            {
+                ["ActiveSilos"] = hosts.Count,
+                ["TotalActivations"] = hosts.Sum(h => h.Statistics.ActivationCount),
+                ["TotalDeactivations"] = hosts.Sum(h => h.Statistics.DeactivationCount)
+            };
 
-            // Test grain activation
-            var testGrain = _client.GetGrain<ITestGrain>(Guid.NewGuid().ToString());
-            await testGrain.PingAsync();
-
-            return HealthCheckResult.Healthy("Orleans cluster is healthy",
-                new Dictionary<string, object>
-                {
-                    ["ActiveSilos"] = hosts.Count,
-                    ["TotalGrains"] = hosts.Sum(h => h.Statistics.ActivationCount)
-                });
+            return hosts.Any()
+                ? HealthCheckResult.Healthy("Orleans cluster operational", data)
+                : HealthCheckResult.Unhealthy("No active silos found", data);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Orleans health check failed");
-            return HealthCheckResult.Unhealthy("Orleans cluster is unhealthy", ex);
+            return HealthCheckResult.Unhealthy("Cluster connectivity failed", ex);
         }
     }
 }
+```
 
-// Register health check
-builder.Services.AddHealthChecks()
-    .AddCheck<OrleansHealthCheck>("orleans", HealthStatus.Unhealthy);
+### Aspire Health Check Integration
+
+Configure health checks in your AppHost for comprehensive monitoring:
+
+```csharp
+// AspireApp.AppHost/Program.cs - Health monitoring setup
+var builder = DistributedApplication.CreateBuilder(args);
+
+// Add Orleans silo with health monitoring
+var orleansSilo = builder.AddProject<Projects.OrleansSilo>("orleans-silo")
+    .WithReplicas(2)
+    .WithHealthCheck(); // Enable health checks
+
+// Add client service with health checks
+var orleansClient = builder.AddProject<Projects.OrleansClient>("orleans-client")
+    .WithReference(orleansSilo)
+    .WithHealthCheck();
+
+// Add health check UI (optional)
+builder.Services.AddHealthChecksUI();
+
+builder.Build().Run();
+```
+
+### Service Discovery Health Integration
+
+Aspire automatically removes unhealthy services from service discovery:
+
+```csharp
+// Automatic health-based service discovery
+public sealed class WeatherService
+{
+    readonly IGrainFactory _grainFactory;
+
+    public WeatherService(IGrainFactory grainFactory)
+    {
+        _grainFactory = grainFactory; // Aspire ensures this connects to healthy silos
+    }
+
+    public async ValueTask<WeatherData> GetWeatherAsync(string location)
+    {
+        // Aspire handles routing to healthy Orleans silos automatically
+        var weatherGrain = _grainFactory.GetGrain<IWeatherGrain>(location);
+        return await weatherGrain.GetCurrentWeatherAsync();
+    }
+}
+```
+
+### Aspire Dashboard Integration
+
+Monitor your Orleans application through the Aspire dashboard:
+
+```bash
+# Start your AppHost project
+dotnet run --project AspireApp.AppHost
+
+# Open Aspire Dashboard at http://localhost:15888
+# You'll see:
+# - Orleans silo health status
+# - Service dependencies and communication
+# - Resource usage (CPU, memory, network)
+# - Log aggregation from all services
+# - Real-time metrics and traces
+```
+
+### Aspire Service Communication Patterns
+
+Best practices for service communication in Aspire:
+
+```csharp
+// ✅ GOOD: Service-to-service communication via Orleans grains
+public sealed class OrderProcessingService
+{
+    readonly IGrainFactory _grainFactory;
+
+    public OrderProcessingService(IGrainFactory grainFactory)
+    {
+        _grainFactory = grainFactory; // Injected by Aspire DI
+    }
+
+    public async ValueTask<OrderConfirmation> ProcessOrderAsync(OrderRequest request)
+    {
+        // Get Orleans grain (Aspire handles service discovery)
+        var orderGrain = _grainFactory.GetGrain<IOrderGrain>(request.OrderId);
+
+        // Call grain method
+        var order = await orderGrain.CreateOrderAsync(request);
+
+        // Get user grain for validation
+        var userGrain = _grainFactory.GetGrain<IUserGrain>(request.UserId);
+        var userProfile = await userGrain.GetProfileAsync();
+
+        // Process payment via payment grain
+        var paymentGrain = _grainFactory.GetGrain<IPaymentGrain>(request.OrderId);
+        var paymentResult = await paymentGrain.ProcessPaymentAsync(order.Total);
+
+        return new OrderConfirmation(order.Id, paymentResult.Success);
+    }
+}
 ```
 
 ### Metrics and Monitoring
+
 Implement comprehensive monitoring:
 
 ```csharp
 // ✅ GOOD: Metrics collection for Orleans applications
 public sealed class GrainMetricsGrain : Grain, IGrainMetricsGrain
 {
-    private readonly IGrainFactory _grainFactory;
-    private readonly ILogger<GrainMetricsGrain> _logger;
-    private readonly Meter _meter;
-    private readonly Counter<long> _grainActivations;
-    private readonly Histogram<double> _grainExecutionTime;
+    readonly IGrainFactory _grainFactory;
+    readonly ILogger<GrainMetricsGrain> _logger;
+    readonly Meter _meter;
+    readonly Counter<long> _grainActivations;
+    readonly Histogram<double> _grainExecutionTime;
 
     public GrainMetricsGrain(IGrainFactory grainFactory, ILogger<GrainMetricsGrain> logger)
     {
@@ -1012,13 +1327,14 @@ public sealed class GrainMetricsGrain : Grain, IGrainMetricsGrain
 ```
 
 ### Logging Best Practices
+
 Implement structured logging for distributed systems:
 
 ```csharp
 // ✅ GOOD: Structured logging in Orleans grains
 public sealed class LoggingGrain : Grain, ILoggingGrain
 {
-    private readonly ILogger<LoggingGrain> _logger;
+    readonly ILogger<LoggingGrain> _logger;
 
     public LoggingGrain(ILogger<LoggingGrain> logger)
     {
@@ -1066,6 +1382,7 @@ public sealed class LoggingGrain : Grain, ILoggingGrain
 ## 10. Advanced Patterns & Best Practices
 
 ### Grain Placement Strategies
+
 Implement custom grain placement for optimal performance:
 
 ```csharp
@@ -1101,17 +1418,18 @@ public sealed class CustomPlacementDirector : IPlacementDirector
 ```
 
 ### Circuit Breaker Pattern
+
 Implement circuit breaker for resilient grain communication:
 
 ```csharp
 // ✅ GOOD: Circuit breaker pattern for grain resilience
 public sealed class CircuitBreakerGrain : Grain, ICircuitBreakerGrain
 {
-    private readonly IPersistentState<CircuitBreakerState> _state;
-    private readonly ILogger<CircuitBreakerGrain> _logger;
+    readonly IPersistentState<CircuitBreakerState> _state;
+    readonly ILogger<CircuitBreakerGrain> _logger;
 
     public CircuitBreakerGrain(
-        [PersistentState("circuit", "Default")] IPersistentState<CircuitBreakerState> state,
+        [PersistentState("circuit", "CircuitBreakerStorage")] IPersistentState<CircuitBreakerState> state,
         ILogger<CircuitBreakerGrain> logger)
     {
         _state = state;
@@ -1182,4 +1500,6 @@ public sealed class CircuitBreakerState
 }
 ```
 
-This comprehensive Orleans coding style guide provides best practices for building high-performance, maintainable distributed applications with proper grain design, state management, communication patterns, and performance optimization techniques.
+This comprehensive Orleans coding style guide provides best practices for building high-performance, maintainable
+distributed applications with proper grain design, state management, communication patterns, and performance
+optimization techniques.
