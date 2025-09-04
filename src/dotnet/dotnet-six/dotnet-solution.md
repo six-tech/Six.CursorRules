@@ -127,7 +127,12 @@ predictable structure.
 │   │    ├── GlobalUsings.cs                          # Global usings file for the benchmark with most common namespaces
 │   │    └── Some.Library.B.csproj                    # Example benchmark project file
 │   └── ...other benchmark projects                   # More benchmarks in `benchmarks/` directory
-├── docs/                                             # Repository documentation (astro.js/starlight)
+└── docs/                                             # Repository documentation (astro.js/starlight)
+    ├── astro.config                                  # Standard Astro.js/Starlight configuration.
+    └── src/                                          
+        └── content/                                  
+            └── docs/                                 # Directory where all documentation pages are located
+
 ```
 
 ### File Responsibilities
