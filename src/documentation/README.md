@@ -56,7 +56,7 @@ All documentation rules in this directory work together to create a complete doc
 
 ## 🔗 Related Rules
 
-- For .NET project documentation standards, see [Documentation Writing Rules](../dotnet/dotnet-six/dotnet-docs.md)
-- For NuGet package documentation, see [Library Management Rules](../dotnet/dotnet-six/dotnet-library.md)
+- For .NET project documentation standards, see [Documentation Writing Rules](../dotnet/general/dotnet-docs.md)
+- For NuGet package documentation, see [Library Management Rules](../dotnet/general/dotnet-library.md)
 - For CI/CD documentation, see [CI/CD Rules](../dotnet/ci-cd/README.md)
-- For general .NET project management, see [Project Management Rules](../dotnet/dotnet-six/README.md)
+- For general .NET project management, see [Project Management Rules](../dotnet/general/README.md)
