@@ -32,8 +32,8 @@ Full documentation: [Six.SolutionTemplate](https://six-tech.github.io/Six.Soluti
 - Use master `Directory.Build.props` in solution root when dealing with `libs/Directory.Build.props`, `tests/Directory.
 Build.props`, and `benchmarks/Directory.Build.props` 
 - Configure secure and reliable package sources in `nuget.config`
-- Write and maintain AGENTS.md for AI agents using `../documentation/agents-md.mdc` rules
-- Write and maintain README.md docs `../documentation/readme-md.mdc` rules
+- Write and maintain AGENTS.md for AI agents using `../../documentation/agents-md.mdc` rules
+- Write and maintain README.md docs `../../documentation/readme-md.mdc` rules
 - Prefer `.slnx` format over traditional `.sln`
 
 

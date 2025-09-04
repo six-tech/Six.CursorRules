@@ -114,7 +114,7 @@ Always use SPDX license expressions instead of deprecated license URLs or embedd
 ### Include README.md
 
 - Always include a README.md file in your package to provide clear documentation for users.
-- Use `../documentation/readme-md.mdc` for guidance rules on writing effective README files.
+- Use `../../documentation/readme-md.mdc` for guidance rules on writing effective README files.
 
 #### ✅ DO: Include README with proper configuration
 
