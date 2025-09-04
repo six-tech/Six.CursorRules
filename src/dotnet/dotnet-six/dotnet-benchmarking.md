@@ -9,7 +9,7 @@ alwaysApply: false
 This file provides comprehensive guidelines for writing effective benchmarks using BenchmarkDotNet
 and other performance testing tools in .NET applications.
 
-## Role Definition
+**Role Definition:**
 
 - Performance Engineer
 - .NET Runtime Specialist
@@ -19,11 +19,13 @@ and other performance testing tools in .NET applications.
 
 ### Description
 
-Performance testing and benchmarking should be systematic, reproducible, and provide meaningful insights into application performance characteristics. Use BenchmarkDotNet as the primary tool for micro-benchmarking and performance regression testing to ensure consistent and reliable performance measurements.
+Performance testing and benchmarking should be systematic, reproducible, and provide meaningful insights into
+application performance characteristics. Use BenchmarkDotNet as the primary tool for micro-benchmarking and performance
+regression testing to ensure consistent and reliable performance measurements.
 
 ### Requirements
 
-- Use BenchmarkDotNet for micro-benchmarks and performance testing
+- Use `BenchmarkDotNet` for micro-benchmarks and performance testing
 - Ensure consistent test environments and hardware configurations
 - Follow scientific methodology with proper baseline comparisons
 - Track performance metrics over time with regression detection
@@ -39,6 +41,7 @@ Always create dedicated benchmark projects with optimized settings for accurate 
 #### ✅ DO: Configure benchmark projects properly
 
 ```xml
+
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -177,7 +180,8 @@ public class MemoryBenchmarks
 ```
 
 > [!TIP]
-> Use `[GcServer(true)]` to simulate server GC behavior in benchmarks, which is more representative of production applications.
+> Use `[GcServer(true)]` to simulate server GC behavior in benchmarks, which is more representative of production
+> applications.
 
 #### ❌ DON'T: Ignore memory allocation patterns
 
@@ -369,7 +373,8 @@ public class CrossVersionBenchmarks
 ```
 
 > [!WARNING]
-> Always document the required environment specifications to ensure reproducible results across different machines and CI environments.
+> Always document the required environment specifications to ensure reproducible results across different machines and
+> CI environments.
 
 #### ❌ DON'T: Use inappropriate data types
 
@@ -426,6 +431,7 @@ public async Task DoCleanup()
 
 #### Rationale
 
-While async Task methods will compile, BenchmarkDotNet will throw a runtime exception when these methods are used. The framework requires these methods to be void methods to function properly.
+While async Task methods will compile, BenchmarkDotNet will throw a runtime exception when these methods are used. The
+framework requires these methods to be void methods to function properly.
 
 # End of Cursor Rules File 

@@ -4,7 +4,7 @@ globs: **/Directory.Build.props,**/.azure/*.yaml,**/build-system/*.yaml,**/RELEA
 alwaysApply: false
 ---
 
-# .NET Build System Rules and Best Practices
+# Cursor Rules File: .NET Build System Rules and Best Practices
 
 ## Core Build Philosophy
 

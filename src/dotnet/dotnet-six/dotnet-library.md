@@ -4,14 +4,16 @@ globs: libs/Directory.Build.props, libs/Directory.Build.targets, libs/*.props, l
 alwaysApply: false
 ---
 
-Role Definition:
+# Cursor Rules File: Creating and Maintaining .NET library projects
 
+**Role Definition:**
 - .NET Solution Architect
 - Build System Expert
 - Package Management Specialist
 
-# Creating and Maintaining .NET library projects
+## General
 
+### Description
 This document provides comprehensive guidance for creating and maintaining high-quality c# library projects
 (.csproj with `library` type) that follow industry best practices.
 
@@ -26,6 +28,15 @@ more.
 
 Full documentation: [Six.SolutionTemplate](https://six-tech.github.io/Six.SolutionTemplate/)
 
+### Requirements
+
+- Use SPDX license expressions for proper license declaration
+- Configure comprehensive package metadata for discoverability
+- Enable SourceLink for enhanced debugging experience
+- Maintain detailed README.md documentation
+- Follow NuGet packaging best practices and conventions
+- Ensure proper versioning and package tagging
+- Configure symbol packages for debugging support
 
 ## License Configuration
 

@@ -7,8 +7,7 @@ alwaysApply: false
 
 # Cursor Rules File: Best Practices for .NET Dependency Management
 
-## Role Definition
-
+**Role Definition:**
 - Package Management Expert
 - Security Analyst
 - License Compliance Specialist

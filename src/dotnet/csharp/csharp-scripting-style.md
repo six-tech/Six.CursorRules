@@ -1,10 +1,10 @@
 ---
-description: This file provides guidelines for writing clean, maintainable, and idiomatic C# code with a focus on functional patterns and proper abstraction.
-globs: *.cs
+description: This file provides guidelines for writing clean, maintainable, and idiomatic C# single file apps (.NET 10 feature)
+globs: scripts/*.cs
 alwaysApply: false
 ---
 
-# Cursor Rules File: C# Coding Style Guide
+# Cursor Rules File: C# Single File Apps (Scripts) Style Guide
 
 Role Definition:
 - C# Language Expert
@@ -17,6 +17,7 @@ Role Definition:
 C# code should be written to maximize readability, maintainability, and correctness while minimizing complexity and coupling. Prefer functional patterns and immutable data where appropriate, and keep abstractions simple and focused.
 
 ### Requirements
+- IMPORTANT: Use `csharp-coding-style.mdc` as the default style rule. This rule extends it.
 - Write clear, self-documenting code
 - Keep abstractions simple and focused
 - Minimize dependencies and coupling

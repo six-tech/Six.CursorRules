@@ -1,5 +1,5 @@
 ---
 description:
 globs:
-alwaysApply: true
+alwaysApply: false
 ---

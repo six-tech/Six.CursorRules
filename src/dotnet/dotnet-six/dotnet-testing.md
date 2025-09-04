@@ -7,7 +7,6 @@ alwaysApply: false
 # Cursor Rules File: Best Practices for .NET Testing
 
 **Role Definition:**
-
 - Test Engineer
 - Quality Assurance Specialist
 - CI/CD Expert

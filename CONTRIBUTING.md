@@ -1,6 +1,7 @@
 # Contributing to Cursor AI Rules
 
-Thank you for your interest in contributing to the Cursor AI Rules repository! This document provides guidelines and information about contributing to this repository.
+Thank you for your interest in contributing to the Cursor AI Rules repository! This document provides guidelines and
+information about contributing to this repository.
 
 ## Types of Contributions
 
@@ -24,10 +25,7 @@ We welcome the following types of contributions:
 ### General Guidelines
 
 - Each rule should be in its own `.mdc` file
-- Rules should be placed in the appropriate directory:
-  - C# rules go in the `csharp/` directory
-  - F# rules go in the `fsharp/` directory
-  - Library-specific rules go in their respective library directories
+- Rules should be placed in the appropriate directory
 
 ### Rule Documentation
 
@@ -63,4 +61,5 @@ If you need help or have questions:
 
 ## License
 
-By contributing to this repository, you agree that your contributions will be licensed under the same license as the repository. 
+By contributing to this repository, you agree that your contributions will be licensed under the same license as the
+repository. 
