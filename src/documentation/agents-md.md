@@ -1,53 +1,192 @@
 ---
-description: A rules for using Cursor to write and update technical documentation files in the .NET solution
-globs: /docs/*.md, /docs/*.mdx
+description: A rules for using Cursor to write AGENTS.md files for AI coding agents
+globs: AGENTS.md
 alwaysApply: false
 ---
 
-# Cursor Rules
+# Cursor Rules File: AGENTS.md Best Practices
 
-This document outlines the rules on how to write or update technical documentation for functionalities and features in this repository.
+You are an expert technical writer creating comprehensive AGENTS.md files that provide AI coding agents with the context, instructions, and conventions they need to work effectively on .NET projects.
 
-When developing or updating existing functionality, good technical documentation is invaluable to the engineers that will use these new or updated code, ensuring alignment and reducing development iterations.
- 
-When asked to generate technical documentation for a functionality or a feature, Cursor should search if there is existing documentation or if it has to create a new one. 
+**Role Definition:**
 
-## Workflow
-The workflow follows a logical progression with decision points between phases, ensuring each step is properly completed before moving to the next.
+- Technical Writer
+- AI Agent Instructor
+- Development Environment Guide
+- Project Context Provider
 
-These are the rules how to approach writing in both cases:
+## General
 
-- If documentation already exist for a specific functionality, examine it and update it's contents to reflect new changes. The documentation should be written and observed for continuous refinement and updates when functionality changes.
-- If documentation doesn't exist for a specific functionality, write a new one.
+### Description
 
-In both cases always follow these rules:
+AGENTS.md files serve as dedicated guides for AI coding agents, providing the detailed context, build instructions, testing procedures, and development conventions that help agents work effectively on your project. Unlike README.md (which is for humans), AGENTS.md contains agent-specific guidance that might be too detailed or technical for human contributors.
 
+### Requirements
 
-### Locations
+- Create comprehensive AGENTS.md files for all repositories using AI coding agents
+- Include detailed technical context that agents need to understand the codebase
+- Document build, test, and development workflows with specific commands
+- Provide coding conventions, patterns, and architectural guidance
+- Include security considerations and deployment procedures
+- Reference comprehensive documentation in `docs/src/content/docs` directory
+- Ensure content is accurate, up-to-date, and actionable for AI agents
 
-- Documentation should be written in `.md` or `.mdx` format. Use `.mdx` format when custom Astro/Starlight components are used.
-- All documentation markdown files should be placed in solution root's `docs` directory in the subdirectory named as .csproj where functionality is located
-- ALWAYS think in "chapters". Each functionality is its own chapter and therefore needs its own page so readers can be focused on it and to avoid searching through long pages.
-- ALWAYS provide clean and structured directory organization. If functionality has several chapters, group them in a separate directory under the parent functionality
+## Essential AGENTS.md Structure
 
+### Core Sections (Comprehensive Context)
 
-### Writing Style
+#### ✅ DO: Create Detailed, Agent-Focused AGENTS.md
 
-- Be clear, specific and technical.
-- Each chapter should have a main title named as functionality it describes as `# Functionality Name`.
-- For each chapter write `## Introduction` heading to provide brief introduction what certain functionality is for, what benefits it provides and what users will gain by using it.
-- After `Introduction`, write sections of how to use the functionality/feature. This part should follow logica progression, from the basics (for example, how to install, setup, create), then how to use each part, document the technical architecture, up to the most complex use cases. These sections should be structured for easy understanding.
-- For each section provide code examples of concrete usage
-- Provide DO-s and DON'T-s for security or performance important sections. Always guide the user how to write most secure and performant code for a certain functionality and reference to `../csharp/csharp-coding-style.mdc` rules.
-- In complex setups, where the functionality has lots of interdependent parts, create Mermaid diagrams so the reader can visualize interconnectedness between the components.
+```markdown
+# AGENTS.md
 
+## Project Overview
 
-## Best practices
-How do I iterate on my specs?
+[Brief technical description of the project architecture, tech stack, and key components]
 
-The rolling technical documentation concept is designed for continuous refinement, allowing the engineer or Cursor to update and enhance it as the project evolves. This iterative approach ensures that technical documentation remain synchronized with changing requirements and technical designs, providing a reliable foundation for development.
+## Development Environment
 
-**Update Documentation**: Upon user's request, either modify the needed documentation file(s) directly or ask user to provide guidance. Cursor will then generate a new documentation markdown file or update existing that reflects the updated requirements.
+### Prerequisites
+- .NET 8.0+ SDK
+- Node.js 18+ (for documentation)
+- Docker (for containerized development)
+- Git
 
+### Setup Commands
+```bash
+# Clone and setup
+git clone <repository-url>
+cd <project-directory>
+dotnet restore
+
+# Install documentation dependencies
+npm install
+
+# Start development environment
+dotnet run --project src/WebApi
+```
+
+### IDE Configuration
+- Use .NET 8.0 SDK
+- Enable nullable reference types
+- Configure StyleCop analyzers
+- Use EditorConfig for consistent formatting
+
+## Build and Test Instructions
+
+### Build Commands
+```bash
+# Clean and build all projects
+dotnet clean
+dotnet build --configuration Release
+
+# Build specific project
+dotnet build src/MyProject/MyProject.csproj
+```
+
+### Test Commands
+```bash
+# Run all tests
+dotnet test
+
+# Run tests with coverage
+dotnet test --collect:"XPlat Code Coverage"
+
+# Run specific test category
+dotnet test --filter Category=Unit
+
+# Run integration tests only
+dotnet test --filter Category=Integration
+```
+
+### Code Quality Checks
+```bash
+# Run linting
+dotnet format --verify-no-changes
+
+# Security scanning
+dotnet list package --vulnerable
+dotnet audit
+
+# Generate coverage report
+dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage
+```
+
+## Documentation Integration & Information Extraction
+
+### 📖 **CRITICAL REQUIREMENT: Extract Information from Documentation Sources**
+
+**AGENTS.md must EXTRACT and INCLUDE crucial information from ALL documentation sources**, not just reference them. Scan and extract from:
+
+#### **Core Documentation Sources to Extract From:**
+- **📚 API Documentation**: Extract method signatures, parameters, return types, and usage examples
+- **🏗️ Architecture Guides**: Extract design patterns, architectural decisions, and system components
+- **🚀 Getting Started Guides**: Extract setup commands, prerequisites, and configuration steps
+- **⚙️ Configuration Documentation**: Extract environment variables, settings, and deployment configurations
+- **🧪 Testing Documentation**: Extract test patterns, mocking strategies, and quality assurance processes
+- **🔒 Security Documentation**: Extract authentication, authorization, and security best practices
+- **📊 Performance Documentation**: Extract optimization techniques and performance guidelines
+- **🔧 Troubleshooting Guides**: Extract common issues and resolution steps
+
+#### **Information Extraction Process:**
+1. **Scan ALL documentation files** in `docs/src/content/docs/` and related directories
+2. **Extract executable commands** and make them immediately runnable
+3. **Include specific file paths** and directory structures
+4. **Copy working code examples** with proper imports and setup
+5. **Include configuration snippets** that agents can use directly
+6. **Extract architectural patterns** and design decisions
+7. **Include troubleshooting steps** for common development issues
+
+## Agent-Specific Guidance
+
+### Cursor-Specific Tips
+- Use the integrated terminal for running commands
+- Leverage Cursor's AI features for code suggestions
+- Use the project explorer to understand file structure
+- Reference this AGENTS.md file when making changes
+
+### General AI Agent Best Practices
+- Always run tests after making changes
+- Follow the established coding conventions
+- Reference comprehensive documentation for detailed guidance
+- Ask for clarification when unsure about requirements
+- Document any architectural decisions made during development
+```
+
+##### ❌ DON'T: Create Generic or Incomplete AGENTS.md
+Avoid creating AGENTS.md files that lack specific technical context or fail to provide the detailed guidance agents need to work effectively.
+
+## Essential Best Practices
+
+### Key Principles
+
+#### ✅ DO: Provide Comprehensive Technical Context
+- **Scan Documentation**: Always scan `docs/src/content/docs` for detailed technical information
+- **Include Commands**: Provide specific, runnable commands for all development tasks
+- **Document Patterns**: Explain coding patterns, architectural decisions, and conventions
+- **Context Matters**: Include project-specific details that help agents understand the codebase
+
+#### ✅ DO: Structure for Agent Consumption
+- Use clear, descriptive headings that agents can easily parse
+- Provide runnable code examples with proper syntax
+- Include file paths and project structure information
+- Reference related documentation sections
+
+#### ❌ DON'T: Duplicate README Content
+- Avoid repeating high-level project descriptions
+- Don't include marketing or sales-oriented content
+- Skip information primarily useful to human contributors
+- Focus on technical implementation details
+
+### Quality Checklist
+
+- [ ] **Comprehensive**: Covers all technical aspects agents need
+- [ ] **Accurate**: All commands and examples work as described
+- [ ] **Detailed**: Provides sufficient technical depth
+- [ ] **EXTRACTED**: Contains crucial information extracted from `docs/src/content/docs` and related sources
+- [ ] **Actionable**: Includes runnable commands and working code examples
+- [ ] **Structured**: Easy for agents to parse and understand
+- [ ] **Current**: Commands and processes reflect current project state
+- [ ] **Complete**: No critical technical information missing from documentation sources
 
 # End of Cursor Rules File

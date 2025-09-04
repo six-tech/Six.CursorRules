@@ -93,6 +93,25 @@ This directory contains comprehensive rules for managing modern .NET projects wi
 - 🚀 **Industry-standard benchmarking** with BenchmarkDotNet best practices
 - 🎯 **Meaningful performance insights** with proper baseline comparisons
 
+## 📝 [Documentation Writing Rules](dotnet-docs.mdc)
+
+**Use this when you're:**
+- Creating comprehensive in-repository technical documentation for .NET projects
+- Writing API documentation, architecture guides, and getting started tutorials
+- Establishing documentation structure and organization in `docs/src/content/docs`
+- Configuring Astro.js/Starlight documentation websites
+- Implementing rolling technical documentation that stays synchronized with code
+- Ensuring documentation follows best practices for clarity and technical accuracy
+
+**These rules ensure:**
+- 📚 **Comprehensive technical documentation** with clear, implementable knowledge
+- 🏗️ **Proper documentation structure** with logical chapter-based organization
+- 🔍 **Rolling technical documentation** that stays synchronized with evolving codebases
+- 📖 **Multiple documentation types** including API references, architecture guides, and client libraries
+- 🎯 **Implementation-focused content** with complete code examples and practical guidance
+- 📏 **Consistent formatting** with frontmatter, security guidance, and performance considerations
+- 🛡️ **Security and performance awareness** integrated throughout documentation
+
 ## 🔗 Integration and Workflow
 
 All rules in this directory are designed to work together seamlessly:
@@ -102,19 +121,23 @@ All rules in this directory are designed to work together seamlessly:
 - **Dependency Management** keeps all projects secure and up to date
 - **Testing Guidelines** ensure code quality and reliability
 - **Benchmarking** provides performance insights and regression detection
+- **Documentation Writing Rules** ensure comprehensive, maintainable technical documentation
 
 ## 📋 Quick Reference
 
-| Concern | Primary Rule | Key Focus |
-|---------|-------------|-----------|
-| 🏗️ Project Structure | [Solution Management](dotnet-solution.mdc) | Architecture & Build System |
-| 📚 Package Creation | [Library Management](dotnet-library.mdc) | NuGet Packaging & Distribution |
-| 📦 Dependencies | [Dependency Management](dotnet-dependency-management.mdc) | Security & License Compliance |
-| 🧪 Code Quality | [Testing Guidelines](dotnet-testing.mdc) | Test Coverage & Reliability |
-| 📊 Performance | [Benchmarking](dotnet-benchmarking.mdc) | Speed & Resource Usage |
+| Concern               | Primary Rule                                              | Key Focus                        |
+|-----------------------|-----------------------------------------------------------|----------------------------------|
+| 🏗️ Project Structure | [Solution Management](dotnet-solution.mdc)                | Architecture & Build System      |
+| 📚 Package Creation   | [Library Management](dotnet-library.mdc)                  | NuGet Packaging & Distribution   |
+| 📦 Dependencies       | [Dependency Management](dotnet-dependency-management.mdc) | Security & License Compliance    |
+| 🧪 Code Quality       | [Testing Guidelines](dotnet-testing.mdc)                  | Test Coverage & Reliability      |
+| 📊 Performance        | [Benchmarking](dotnet-benchmarking.mdc)                   | Speed & Resource Usage           |
+| 📝 Documentation      | [Documentation Writing Rules](dotnet-docs.mdc)            | Technical Content & Organization |
 
 ## 🔗 Related Rules
 
 - For publishing your own NuGet packages, see the [NuGet Package Publishing Rules](../nuget-packages/README.md)
 - For CI/CD integration and automation, see the [CI/CD Rules](../ci-cd/README.md)
-- For documentation standards, see the [Documentation Rules](../documentation/README.md) 
+- For documentation best practices, see the [Documentation Rules](../../documentation/README.md)
+- For AGENTS.md guidelines for AI agents, see [AGENTS.md Best Practices](../../documentation/agents-md.md)
+- For concise README.md guidelines, see [README.md Best Practices](../../documentation/readme-md.md) 
