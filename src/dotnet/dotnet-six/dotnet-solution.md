@@ -27,6 +27,8 @@ Full documentation: [Six.SolutionTemplate](https://six-tech.github.io/Six.Soluti
 
 
 ### Requirements
+
+**- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 - Maintain a `global.json` for SDK version control
 - Maintain master `Directory.Build.props` in solution root for common build properties
 - Use master `Directory.Build.props` in solution root when dealing with `libs/Directory.Build.props`, `tests/Directory.

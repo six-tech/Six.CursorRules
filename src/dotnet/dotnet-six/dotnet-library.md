@@ -30,6 +30,7 @@ Full documentation: [Six.SolutionTemplate](https://six-tech.github.io/Six.Soluti
 
 ### Requirements
 
+**- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 - Use SPDX license expressions for proper license declaration
 - Configure comprehensive package metadata for discoverability
 - Enable SourceLink for enhanced debugging experience

@@ -25,6 +25,7 @@ regression testing to ensure consistent and reliable performance measurements.
 
 ### Requirements
 
+**- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 - Use `BenchmarkDotNet` for micro-benchmarks and performance testing
 - Ensure consistent test environments and hardware configurations
 - Follow scientific methodology with proper baseline comparisons

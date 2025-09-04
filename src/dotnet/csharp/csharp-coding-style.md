@@ -17,6 +17,7 @@ Role Definition:
 C# code should be written to maximize readability, maintainability, and correctness while minimizing complexity and coupling. Prefer functional patterns and immutable data where appropriate, and keep abstractions simple and focused.
 
 ### Requirements
+**- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 - Write clear, self-documenting code
 - Keep abstractions simple and focused
 - Minimize dependencies and coupling

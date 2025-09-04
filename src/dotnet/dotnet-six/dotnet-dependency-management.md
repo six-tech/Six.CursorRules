@@ -22,6 +22,7 @@ management ensures maintainable, secure, and performant applications while minim
 
 ### Requirements
 
+**- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 - Use dotnet CLI exclusively for package management operations
 - Verify package licenses and security status before installation
 - Monitor for security vulnerabilities continuously

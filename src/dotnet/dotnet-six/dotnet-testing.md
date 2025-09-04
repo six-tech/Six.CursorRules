@@ -20,6 +20,7 @@ with proper isolation and clear patterns for test organization and execution.
 
 ### Requirements
 
+**- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 - Use xUnit as the testing framework
 - Ensure test isolation
 - Follow consistent patterns
