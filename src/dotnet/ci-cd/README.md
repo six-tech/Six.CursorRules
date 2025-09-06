@@ -1,58 +1,90 @@
-# CI/CD Rules and Best Practices
+# 🌊 CI/CD Rules and Best Practices
 
-This directory contains detailed rules and best practices for CI/CD processes in .NET projects. These rules are designed
-to ensure consistency and quality across our build and deployment processes, supporting both GitHub Actions and Azure
+This directory contains comprehensive rules and best practices for CI/CD processes in .NET projects. These rules ensure
+consistency, quality, and security across build and deployment processes, supporting both GitHub Actions and Azure
 DevOps pipelines.
 
-## Available Rules
+## 🏗️ [.NET Build System](dotnet-gh-workflow-build.mdc)
 
-### [.NET Build System Rules](./dotnet-build.mdc)
+Use these rules when:
 
-Comprehensive guidelines for .NET build systems, covering:
+- 🏭 Setting up automated build pipelines for .NET projects
+- 📦 Managing project structure and build configurations
+- 🔄 Implementing version management and release processes
+- 🧪 Organizing testing strategies and quality assurance
+- 🌐 Configuring cross-platform builds and deployments
+- 📊 Setting up monitoring and performance tracking
 
-- Core build philosophy and best practices
-- Project structure and required files
-- Build script organization
-- Version management
-- CI/CD pipeline configuration for both GitHub Actions and Azure DevOps
-- Cross-platform build compatibility
+These rules ensure:
 
-This rule applies to solution files (`.sln`), project files (`.csproj`, `.fsproj`), build configuration files, and CI/CD
-pipeline definitions (`.github/workflows/*.yaml` and `.azure/*.yaml`).
+- 🔧 **Native .NET CLI usage** as the primary build mechanism
+- 📁 **Cross-platform compatibility** across Windows, Linux, and macOS
+- 🏷️ **Automated version management** with semantic versioning
+- 🧪 **Comprehensive testing** with proper test result publishing
+- 📈 **Performance optimization** through efficient build caching
+- 🔐 **Security integration** with proper credential management
+- 📊 **Quality assurance** with automated validation and reporting
 
-### [Code Signing Rules](./code-signing.mdc)
+## 🔐 [Code Signing](dotnet-gh-workflow-code-signing.mdc)
 
-Best practices and configuration guidelines for .NET code signing, including:
+Use these rules when:
 
-- SignClient configuration
-- Security best practices
-- CI/CD integration for code signing in both GitHub Actions and Azure DevOps
-- Credential management
-- Audit logging requirements
+- 🛡️ Implementing secure code signing for .NET applications
+- 🔑 Managing signing certificates and cryptographic keys
+- 🔒 Configuring secure CI/CD pipelines for signed releases
+- 📋 Setting up audit trails and compliance requirements
+- 🏢 Implementing enterprise-grade security practices
+- 📊 Monitoring certificate lifecycle and renewal processes
 
-This rule applies to signing configuration files (`signsettings.json`, `appsettings.json`) and package files (`.nupkg`).
+These rules ensure:
 
-- `nuget-package-publishing.mdc`: Contains comprehensive rules for publishing NuGet packages, including:
-  - License configuration best practices
-  - Package documentation requirements
-  - Metadata organization guidelines
-  - Source debugging and symbol package setup
-  - Dependency management recommendations
-  - Versioning conventions
-  - Build and pack commands
-  - Quality assurance checklist
--
+- 🔐 **Automated code signing** in CI/CD pipelines using SignClient
+- 🛡️ **Security best practices** for credential management and access control
+- 📋 **Comprehensive audit logging** for all signing operations
+- 🔄 **Certificate lifecycle management** with expiration monitoring
+- 🏢 **Compliance requirements** for enterprise deployments
+- ✅ **Signature verification** before package distribution
 
-## Using These Rules
+## 📦 [NuGet Package Publishing](dotnet-gh-workflow-nuget-publishing.mdc)
 
-These rules are automatically enforced through Cursor when working with relevant files. The rules provide inline
-guidance and validation to ensure your build and deployment configurations follow our established best practices,
-regardless of whether you're using GitHub Actions or Azure DevOps as your CI/CD platform.
+Use these rules when:
 
-For more information about our CI/CD practices or to propose changes to these rules, please contact the DevOps team.
+- 📤 Publishing high-quality NuGet packages to public or private feeds
+- 🏷️ Managing package versioning and metadata
+- 📚 Creating comprehensive package documentation
+- 🔍 Ensuring package discoverability and quality
+- 🔒 Implementing secure publishing workflows
+- 📊 Setting up automated package validation and testing
 
-## Related Rules
+These rules ensure:
 
-- For NuGet package publishing best practices, see the [NuGet Package Publishing Rules](../nuget-packages/README.md)
-- For .NET SDK management, see the [.NET SDK Management Rules](../dotnet-sdk/README.md)
-- For .NET tool management, see the [.NET Tool Rules](../dotnet-tools/README.md) 
+- 📋 **Semantic versioning** following SemVer principles
+- 📚 **Comprehensive metadata** with proper descriptions and documentation
+- 🔗 **Source debugging support** with symbol packages and SourceLink
+- 🛡️ **Security validation** with automated package scanning
+- 📊 **Quality assurance** through pre-publish checklists
+- 🔄 **Automated publishing** workflows for reliable releases
+- 📈 **Package discoverability** with proper tagging and categorization
+
+## 🚀 **Using These Rules**
+
+### **Automatic Enforcement**
+
+These rules are automatically enforced through Cursor when working with relevant files, providing inline guidance and
+validation to ensure your CI/CD configurations follow established best practices.
+
+### **Pipeline Compatibility**
+
+All rules support both GitHub Actions and Azure DevOps pipelines, ensuring consistent practices regardless of your CI/CD
+platform choice.
+
+### **Integration Points**
+
+- **Build Systems**: Connect with project structure and testing rules
+- **Security**: Integrate with authentication and authorization requirements
+- **Quality**: Work alongside testing and documentation standards
+- **Compliance**: Support audit and regulatory requirements
+
+## 📞 **Support and Contact**
+
+For questions about our CI/CD practices or to propose changes to these rules, please contact the DevOps team. 
