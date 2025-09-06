@@ -1,4 +1,4 @@
-![Six Cursor Rules](assets/six-cursor-rules-banner-wide-1980-01.png)
+![Six Cursor Rules](.cursor/six-cursor-rules-banner-wide-1980-01.png)
 
 # Six Cursor Rules
 
