@@ -1,6 +1,6 @@
 ---
 description: This file provides guidelines for writing effective, maintainable tests using xUnit. Aspire for testing and related tools.
-globs: tests/Directory.Build.props, *.Tests.csproj, *.Test.*.csproj, *.cs
+globs: tests/Directory.Build.props, *.Tests.csproj, *.Test.*.csproj, tests/**/*.cs
 alwaysApply: false
 ---
 

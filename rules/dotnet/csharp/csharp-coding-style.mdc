@@ -34,7 +34,7 @@ coupling. Prefer functional patterns and immutable data where appropriate and ke
   expressions)
 - **DOCUMENTATION REQUIREMENT**: If new code has been added or existing code modified, documentation for that part MUST
   be added/updated in `docs/src/content/docs/` in the appropriate directory and following the rules specified for
-  documentation writing in `../general/dotnet/docs.mdc`
+  documentation writing in `../general/dotnet/dotnet-docs.mdc`
 - **DOCUMENTATION LOOKUP REQUIREMENT**: Before starting to write any code, the agent should try to find existing
   documentation in `docs/src/content/docs/` that relates to the task. After searching, if there are docs that help, the
   agent MUST use them to gather additional knowledge and context

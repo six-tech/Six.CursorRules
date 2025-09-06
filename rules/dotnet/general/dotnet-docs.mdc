@@ -35,8 +35,8 @@ existing documentation or if it has to create a new one.
 - Maintain (write new and update existing documentation pages) in `docs/src/content/docs` directory
 - Prefer `.mdx` format if custom components are needed (if Markdown is not enough). Otherwise, use standard `.md`
   format.
-- Use astro.js rules for writing documentation pages and organization from `../../web/astro/astro-coding-style.mdc`
-- Use typecript rules for writing documentation pages and organization from `../../web/typescript/typescript-coding-style.mdc`
+- Use Astro.js rules for writing documentation pages and organization from `../../web/astro/astro-coding-style.mdc`
+- Use Typescript rules for writing documentation pages and organization from `../../web/typescript/typescript-coding-style.mdc`
 **- NEVER: Place sensitive information in the documentation (e.g. passwords, API keys, personal information, etc.)**
 
 ## Solution Structure

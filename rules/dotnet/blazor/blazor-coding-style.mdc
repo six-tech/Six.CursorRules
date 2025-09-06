@@ -1,6 +1,6 @@
 ---
 description: Best practices for building modern, maintainable Blazor applications with proper component architecture, state management, and performance optimization
-globs: *.razor, *.razor.cs, *.cs
+globs: *.razor, *.razor.cs
 alwaysApply: false
 ---
 

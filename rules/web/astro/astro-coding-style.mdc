@@ -1,6 +1,6 @@
 ---
 description: This file provides guidelines for developing Astro.js websites with best practices for component development, routing, content management, and performance optimization.
-globs: *.js, *.ts, *.md, *.mdx, *.css, *.astro
+globs: docs/**/*.js, docs/**/*.ts, docs/**/*.md, docs/**/*.mdx, docs/**/*.css, docs/**/*.astro
 alwaysApply: false
 ---
 
