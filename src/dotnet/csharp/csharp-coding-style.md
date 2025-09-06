@@ -7,6 +7,7 @@ alwaysApply: false
 # Cursor Rules File: C# Coding Style Guide
 
 Role Definition:
+
 - C# Language Expert
 - Software Architect
 - Code Quality Specialist
@@ -14,10 +15,14 @@ Role Definition:
 ## 1. Overview & General Principles
 
 ### Core Philosophy
-C# code should be written to maximize readability, maintainability, and correctness while minimizing complexity and coupling. Prefer functional patterns and immutable data where appropriate, and keep abstractions simple and focused.
+
+C# code should be written to maximize readability, maintainability, and correctness while minimizing complexity and
+coupling. Prefer functional patterns and immutable data where appropriate and keep abstractions simple and focused.
 
 ### Requirements
+
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
+
 - Write clear, self-documenting code
 - Keep abstractions simple and focused
 - Minimize dependencies and coupling
@@ -25,20 +30,31 @@ C# code should be written to maximize readability, maintainability, and correctn
 - Prefer LINQ and lambda expressions for collection operations
 - Use descriptive variable and method names (e.g., `IsUserSignedIn`, `CalculateTotal`)
 - Use object-oriented and functional programming patterns as appropriate
-- Use C# 13+ features when appropriate (e.g., record types, pattern matching, null-coalescing assignment, collection expressions)
+- Use C# 13+ features when appropriate (e.g., record types, pattern matching, null-coalescing assignment, collection
+  expressions)
+- **DOCUMENTATION REQUIREMENT**: If new code has been added or existing code modified, documentation for that part MUST
+  be added/updated in `docs/src/content/docs/` in the appropriate directory and following the rules specified for
+  documentation writing in `../general/dotnet/docs.mdc`
+- **DOCUMENTATION LOOKUP REQUIREMENT**: Before starting to write any code, the agent should try to find existing
+  documentation in `docs/src/content/docs/` that relates to the task. After searching, if there are docs that help, the
+  agent MUST use them to gather additional knowledge and context
 
 ## 2. Project Setup & Configuration
 
 ### Enable Nullable Reference Types
+
 Always enable nullable reference types in your project:
+
 ```xml
+
 <PropertyGroup>
-  <Nullable>enable</Nullable>
-  <WarningsAsErrors>nullable</WarningsAsErrors>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
 </PropertyGroup>
 ```
 
 ### Visual Style Rules
+
 - **DO NOT** use 'private' keyword anywhere to avoid visual noise
 - Use C#'s expressive syntax (e.g., null-conditional operators, string interpolation)
 - Use 'var' for implicit typing when the type is obvious
@@ -67,6 +83,7 @@ class OrderProcessor
 ## 3. Type System & Data Modeling
 
 ### Record vs Class Guidelines
+
 - Prefer records for data types with value semantics
 - Make classes sealed by default
 - Use value objects to avoid primitive obsession
@@ -99,6 +116,7 @@ public abstract class Repository<T>
 ```
 
 ### Value Objects
+
 Use strong typing with value objects to avoid primitive obsession:
 
 ```csharp
@@ -124,6 +142,7 @@ public class Order
 ```
 
 ### Performance Types
+
 Use readonly structs for small immutable value types:
 
 ```csharp
@@ -151,6 +170,7 @@ public sealed class Point
 ```
 
 ### Enums and Constants
+
 Use explicit backing types and proper naming:
 
 ```csharp
@@ -188,6 +208,7 @@ public static readonly ImmutableHashSet<string> ValidStatuses =
 ## 4. Language Features & Syntax
 
 ### Naming Conventions
+
 - Use **PascalCase** for class names, method names, and public members
 - Use **camelCase** for local variables and private fields
 - Use **UPPERCASE** for constants
@@ -234,6 +255,7 @@ public interface IOrderRepository
 ```
 
 ### Modern C# Syntax
+
 Use var for implicit typing and modern language features:
 
 ```csharp
@@ -265,6 +287,7 @@ List<string> statuses = ["pending", "processing"];
 ```
 
 ### Collection Expressions
+
 Always use collection expressions instead of new():
 
 ```csharp
@@ -283,6 +306,7 @@ var orders = new List<Order> { order1, order2, order3 };
 ```
 
 ### Pattern Matching
+
 Use pattern matching effectively over nested if statements:
 
 ```csharp
@@ -316,6 +340,7 @@ public decimal CalculateDiscount(Customer customer)
 ```
 
 ### Range Indexers
+
 Prefer range indexers over LINQ when appropriate:
 
 ```csharp
@@ -331,6 +356,7 @@ var slice = items.Skip(2).Take(3).ToList();
 ```
 
 ### Boolean Logic
+
 Do not use ! in true/false checks as it can be easily missed:
 
 ```csharp
@@ -348,6 +374,7 @@ if (!isActive)
 ```
 
 ### Symbol References
+
 Always use nameof operator for refactor-safe references:
 
 ```csharp
@@ -398,6 +425,7 @@ public void ProcessOrder(Order order)
 ## 5. Code Structure & Organization
 
 ### Functional Patterns
+
 Prefer pure methods and separate state from behavior:
 
 ```csharp
@@ -435,6 +463,7 @@ public void CalculateAndUpdateTotalPrice()
 ```
 
 ### Extension Methods
+
 Use extension methods appropriately for domain-specific operations:
 
 ```csharp
@@ -447,6 +476,7 @@ public static class OrderExtensions
 ```
 
 ### Dependency Management
+
 Minimize constructor injection and prefer composition:
 
 ```csharp
@@ -490,6 +520,7 @@ public class OrderProcessor
 ```
 
 ### Generic Constraints
+
 Use meaningful generic constraints:
 
 ```csharp
@@ -517,6 +548,7 @@ public static TResult Transform<TInput, TResult>(TInput input)
 ```
 
 ### Testing Considerations
+
 Design for testability using pure functions:
 
 ```csharp
@@ -542,6 +574,7 @@ public decimal CalculateDiscount()
 ## 6. Performance & Memory Management
 
 ### String Performance
+
 Optimize string operations for performance:
 
 ```csharp
@@ -568,6 +601,7 @@ foreach (var item in items)
 ```
 
 ### Span<T> and Memory<T> for High-Performance
+
 Use Span<T> and Memory<T> for hot-path operations:
 
 ```csharp
@@ -616,6 +650,7 @@ public static void ParseOrderData(ReadOnlySpan<char> data, List<OrderLine> lines
 ```
 
 ### Collection Performance
+
 Choose appropriate collection types and avoid unnecessary allocations:
 
 ```csharp
@@ -641,6 +676,7 @@ public static bool HasValidOrders(IEnumerable<Order> orders) =>
 ```
 
 ### LINQ Performance
+
 Use LINQ efficiently and prefer lambda expressions:
 
 ```csharp
@@ -682,6 +718,7 @@ if (orders.Count(o => o.IsRush) > 0) // Counts all matches
 ```
 
 ### Hot Path Optimization
+
 Use AggressiveInlining and optimize frequently used methods:
 
 ```csharp
@@ -714,6 +751,7 @@ public void ProcessLargeData(ReadOnlySpan<byte> data)
 ```
 
 ### Immutable Collections
+
 Use System.Collections.Immutable effectively:
 
 ```csharp
@@ -748,6 +786,7 @@ return new Order(
 ```
 
 ### Resource Management
+
 Implement proper disposal patterns:
 
 ```csharp
@@ -785,6 +824,7 @@ public async Task ProcessOrdersAsync(IEnumerable<OrderId> orderIds)
 ## 7. Error Handling & Validation
 
 ### Result Types vs Exceptions
+
 - Use Result types for expected failures from Six.Tookit.Result library
 - Use exceptions for exceptional cases, not for control flow
 
@@ -813,6 +853,7 @@ public static OrderId From(string value)
 ```
 
 ### Safe Operations
+
 Use Try methods for safer operations:
 
 ```csharp
@@ -863,6 +904,7 @@ catch (FormatException)
 ```
 
 ### Guard Clauses and Validation
+
 Implement guard clauses at method start using modern C# features:
 
 ```csharp
@@ -891,6 +933,7 @@ public void ProcessOrder(Order order)
 ```
 
 ### Nullability Handling
+
 Use proper null checking patterns:
 
 ```csharp
@@ -950,6 +993,7 @@ public class OrderValidator
 ```
 
 ### Nullability Attributes
+
 Use nullability attributes for better API contracts:
 
 ```csharp
@@ -995,6 +1039,7 @@ public interface IOrderRepository
 ## 8. Asynchronous Programming
 
 ### Async Best Practices
+
 Follow async/await patterns correctly:
 
 ```csharp
@@ -1024,6 +1069,7 @@ public Task<int> GetDefaultQuantityAsync() =>
 ```
 
 ### CancellationToken Flow
+
 Always flow CancellationToken through async calls:
 
 ```csharp
@@ -1052,6 +1098,7 @@ public async Task<Order> GetOrderWithTimeout(OrderId id)
 ```
 
 ### Async Anti-Patterns
+
 Avoid common async pitfalls:
 
 ```csharp
@@ -1104,6 +1151,7 @@ public Task<Order> ProcessOrderAsync(OrderRequest request)
 ```
 
 ### TaskCompletionSource
+
 Use TaskCompletionSource correctly to avoid deadlocks:
 
 ```csharp
@@ -1120,13 +1168,18 @@ readonly TaskCompletionSource<Order> _tcs = new();
 Write extensive technical XML doc comments for public APIs:
 
 ### Documentation Rules
+
 - Be technical, detailed but straight to the point
 - **DO NOT** write XML documentation comments for private members, methods, etc.
-- **DO NOT** write XML documentation comments if there are XML doc comments already applied but rewrite if they are not valid anymore
-- For each top level class, record, struct, enum, and similar write extensive documentation what this type is for and how to use it
-- For properties, write brief and concise XML documentation of what this property is for and how to use it. Do not overdocument.
+- **DO NOT** write XML documentation comments if there are XML doc comments already applied but rewrite if they are not
+  valid anymore
+- For each top level class, record, struct, enum, and similar write extensive documentation what this type is for and
+  how to use it
+- For properties, write brief and concise XML documentation of what this property is for and how to use it. Do not
+  overdocument.
 - **DO NOT** by ANY MEANS change APIs, property, method names, etc. unless explicitly requested by the user
-- **DO NOT** write XML documentation comments for members implementing interfaces and abstract classes, they are already documented in the interface
+- **DO NOT** write XML documentation comments for members implementing interfaces and abstract classes, they are already
+  documented in the interface
 - **DO NOT** write XML documentation comments for overriden members, they are already documented in the base class
 
 ```csharp

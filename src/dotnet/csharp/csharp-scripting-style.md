@@ -16,25 +16,32 @@ Role Definition:
 
 ### Core Philosophy
 
-C# single file apps (a feature added in `.NET 10`) should be used for simple, single-purpose scripts. This way we can keep
+C# single file apps (a feature added in `.NET 10`) should be used for simple, single-purpose scripts. This way we can
+keep
 our entire codebase in c# and avoid the need for several different languages/script types.
 Also, since this is pure .NET, we can leverage the full power of .NET and available libraries.
 
 ### Requirements
 
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
+
 - ALWAYS: Use `csharp-coding-style.mdc` as the default style rule. This rule extends it.
 - ALWAYS: Use `.NET 10` or later.
 - ALWAYS: Start all scripts with `#!/usr/bin/env dotnet`
-- ALWAYS: Import needed packages with c# single file app importing format: `#:package Spectre.Console@0.49.1`
+- ALWAYS: Import the necessary packages with c# single file app importing format: `#:package Spectre.Console@0.49.1`
 - ALWAYS use `Spectre.Console` library for outputting text to the console.
 - ALWAYS use `CliWrap` library for executing external processes.
-
-
+- **DOCUMENTATION REQUIREMENT**: If new code has been added or existing code modified, documentation for that part MUST
+  be added/updated in `docs/src/content/docs/` in the appropriate directory and following the rules specified for
+  documentation writing in `../general/dotnet/docs.mdc`
+- **DOCUMENTATION LOOKUP REQUIREMENT**: Before starting to write any code, the agent should try to find existing
+  documentation in `docs/src/content/docs/` that relates to the task. After searching, if there are docs that help, the
+  agent MUST use them to gather additional knowledge and context
 
 ### Script Organization Patterns
 
 #### Script Entry Point Structure
+
 Organize scripts with a clear separation of concerns:
 
 ```csharp
@@ -110,6 +117,7 @@ static async Task CleanupAsync(ScriptConfig config)
 ### Error Handling and Logging
 
 #### Script-Specific Error Handling
+
 Handle errors gracefully in script environments:
 
 ```csharp
@@ -182,6 +190,7 @@ public static async Task<ScriptResult> ExecuteBuildAsync()
 ### User Interaction Patterns
 
 #### Command Line Argument Parsing
+
 Handle script arguments effectively:
 
 ```csharp
@@ -221,6 +230,7 @@ public class BuildSettings : CommandSettings
 ```
 
 #### Interactive Prompts
+
 Create user-friendly interactive scripts:
 
 ```csharp
@@ -282,6 +292,7 @@ static async Task DeployToEnvironmentsAsync(List<string> environments)
 ### External Process Management
 
 #### Using CliWrap Effectively
+
 Handle external processes properly in scripts:
 
 ```csharp
@@ -347,6 +358,7 @@ public static async Task<ScriptResult> BuildMultipleProjectsAsync(IEnumerable<st
 ### Script Testing and Validation
 
 #### Script Testing Patterns
+
 Test scripts just like regular code:
 
 ```csharp
@@ -400,6 +412,7 @@ public async Task ScriptRunner_ShouldFail_WhenSourceDirectoryDoesNotExist()
 ### Script Deployment and Distribution
 
 #### Script Packaging
+
 Package scripts for distribution:
 
 ```bash
@@ -416,6 +429,7 @@ dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFil
 ```
 
 #### Script Version Management
+
 Handle script versioning and updates:
 
 ```csharp
@@ -439,6 +453,7 @@ static void ValidateEnvironment()
 ### Best Practices Summary
 
 #### ✅ DO: Follow These Patterns
+
 - Structure scripts with clear phases (setup → main → cleanup)
 - Use Spectre.Console for rich console output
 - Handle errors gracefully with appropriate exit codes
@@ -451,6 +466,7 @@ static void ValidateEnvironment()
 - Support command-line options for different execution modes
 
 #### ❌ DON'T: Make These Mistakes
+
 - Don't write monolithic scripts without a proper organization
 - Don't ignore error handling - scripts run in unpredictable environments
 - Don't hardcode paths - use relative paths and configuration
