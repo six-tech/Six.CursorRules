@@ -1,28 +1,69 @@
 ---
-description: This document provides comprehensive guidance for publishing high-quality NuGet packages that follow industry best practices.
+description: Comprehensive best practices for publishing high-quality NuGet packages with proper versioning, metadata, and distribution strategies
 globs: *.props, *.csproj, *.fsproj
 alwaysApply: false
 ---
 
-# NuGet Package Publishing Best Practices
+# Cursor Rules File: NuGet Package Publishing Best Practices
 
-This document provides comprehensive guidance for publishing high-quality NuGet packages that follow industry best practices.
+## Role Definition
 
-## Table of Contents
+- Package Publisher
+- Release Manager
+- Quality Assurance Lead
+- DevOps Engineer
+- Documentation Specialist
 
-- [Publishing NuGet packages](mdc:#publishing-nuget-packages)
-- [Build and Pack Commands](mdc:#build-and-pack-commands)
-- [Quality Checks](mdc:#quality-checks)
+## General
 
+### Description
 
-## Publishing NuGet packages
+Create and publish high-quality NuGet packages that follow industry best practices for versioning, metadata, documentation, and distribution. Establish automated publishing workflows that ensure package quality, security, and discoverability while maintaining proper dependency management and release processes.
 
-### ✅ DO: Publish both package and symbols
+### Requirements
 
-```shell
-dotnet pack -c Release
-dotnet nuget push bin/Release/MyPackage.1.0.0.nupkg -s https://api.nuget.org/v3/index.json -k YOUR_API_KEY
-dotnet nuget push bin/Release/MyPackage.1.0.0.snupkg -s https://api.nuget.org/v3/index.json -k YOUR_API_KEY
+**- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
+- Follow semantic versioning (SemVer) for all package releases
+- Include comprehensive package metadata and documentation
+- Implement automated package validation and testing
+- Use secure publishing credentials and environments
+- Maintain proper dependency management and version constraints
+- Ensure packages include symbols for debugging
+- Implement automated release notes and changelog generation
+
+## Package Publishing Workflow
+
+### Publishing Strategy
+
+Establish a comprehensive strategy for publishing NuGet packages with both regular and symbol packages.
+
+#### ✅ DO: Publish both package and symbol packages
+
+```bash
+# Build and pack the project
+dotnet pack -c Release --include-symbols
+
+# Publish main package
+dotnet nuget push "bin/Release/*.nupkg" \
+  --source https://api.nuget.org/v3/index.json \
+  --api-key $NUGET_API_KEY \
+  --skip-duplicate
+
+# Publish symbol package
+dotnet nuget push "bin/Release/*.snupkg" \
+  --source https://nuget.smbsrc.net/ \
+  --api-key $NUGET_API_KEY \
+  --skip-duplicate
+```
+
+#### ❌ DON'T: Publish without symbols
+
+```bash
+# DON'T publish without symbol packages
+dotnet nuget push "bin/Release/*.nupkg" \
+  --source https://api.nuget.org/v3/index.json \
+  --api-key $NUGET_API_KEY
+# Missing symbol package prevents debugging
 ```
 
 
@@ -327,10 +368,85 @@ jobs:
         nuget-pe validate bin/Release/*.nupkg
 ```
 
+## CI/CD Integration
+
+### Automated Publishing Workflows
+
+#### ✅ DO: Implement automated publishing pipelines
+
+```yaml
+# GitHub Actions publishing workflow
+name: Publish to NuGet
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore -c Release
+
+    - name: Test
+      run: dotnet test --no-build -c Release
+
+    - name: Pack
+      run: dotnet pack --no-build -c Release --include-symbols
+
+    - name: Publish to NuGet
+      run: |
+        dotnet nuget push "bin/Release/*.nupkg" \
+          --source https://api.nuget.org/v3/index.json \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --skip-duplicate
+
+    - name: Publish Symbols
+      run: |
+        dotnet nuget push "bin/Release/*.snupkg" \
+          --source https://nuget.smbsrc.net/ \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --skip-duplicate
+```
+
+#### ✅ DO: Include version management in CI/CD
+
+```yaml
+- name: Update version
+  run: |
+    # Extract version from tag (e.g., v1.2.3)
+    VERSION=${GITHUB_REF#refs/tags/v}
+    echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+- name: Pack with version
+  run: dotnet pack -c Release --include-symbols /p:Version=$VERSION
+```
+
+> [!WARNING]
+> **Publishing Security:**
+>
+> - Never commit API keys to source control
+> - Use environment variables or secret management systems
+> - Implement proper access controls for publishing operations
+> - Regularly rotate publishing credentials
+
 ## Additional Resources
 
-- [NuGet Documentation](mdc:https:/docs.microsoft.com/en-us/nuget)
-- [SPDX License List](mdc:https:/spdx.org/licenses)
-- [SourceLink Documentation](mdc:https:/github.com/dotnet/sourcelink)
-- [SemVer Specification](mdc:https:/semver.org)
-- [NuGet Package Explorer](mdc:https:/github.com/NuGetPackageExplorer/NuGetPackageExplorer) 
+- [NuGet Documentation](https://docs.microsoft.com/en-us/nuget)
+- [SPDX License List](https://spdx.org/licenses)
+- [SourceLink Documentation](https://github.com/dotnet/sourcelink)
+- [SemVer Specification](https://semver.org)
+- [NuGet Package Explorer](https://github.com/NuGetPackageExplorer/NuGetPackageExplorer)
+
+# End of Cursor Rules File 

@@ -94,3 +94,4 @@ This directory contains comprehensive rules for writing clean, maintainable Type
 
 TypeScript enables writing safer, more maintainable JavaScript code while providing excellent developer experience and tooling support.
 
+

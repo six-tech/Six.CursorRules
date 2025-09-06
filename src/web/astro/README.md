@@ -79,3 +79,4 @@ Choose Astro.js when you need:
 
 Astro excels at delivering fast, SEO-friendly websites while maintaining the flexibility to add interactivity exactly where needed.
 
+

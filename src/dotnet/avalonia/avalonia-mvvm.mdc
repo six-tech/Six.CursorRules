@@ -1,29 +1,37 @@
 ---
 description: This file provides comprehensive guidelines for writing clean, maintainable Avalonia XAML and C# code with modern UI patterns, MVVM architecture, and performance best practices.
-globs: *.cs, *.axaml
+globs: *.axaml, *.cs, *.csproj, Program.cs, appsettings.json
 alwaysApply: false
 ---
+
 ## Role Definition:
  - Avalonia UI Expert
  - XAML Specialist
  - MVVM Architecture Specialist
  - Cross-Platform Desktop Application Developer
 
-## General:
-  Description: >
-    Avalonia XAML and C# code should be written to maximize readability, maintainability, and performance
-    while following MVVM patterns, proper data binding, and cross-platform compatibility. Focus on
-    reactive programming patterns, proper resource management, and modern Avalonia UI features.
-  Requirements:
-    - Follow the rules for c# coding style in `../csharp/csharp-coding-style.mdc`
-    - Follow MVVM architecture patterns
-    - Use reactive programming with ReactiveUI when appropriate
-    - Use ReactiveUI Source Generators to simplify and enhance ReactiveUI objects (https://github.com/reactiveui/ReactiveUI.SourceGenerators)
-    - All views must implement IViewFor<TViewModel> for proper view-viewmodel binding
-    - Use DynamicData library for reactive collections (https://github.com/reactivemarbles/DynamicData)
-    - Write performant and memory-efficient UI code
-    - Ensure cross-platform compatibility
-    - Use modern Avalonia UI features and controls
+## General
+### Description
+Avalonia XAML and C# code should be written to maximize readability, maintainability, and performance
+while following MVVM patterns, proper data binding, and cross-platform compatibility. Focus on
+reactive programming patterns, proper resource management, and modern Avalonia UI features.
+    
+    
+### Requirements
+- **NEVER** place sensitive information in generated code (passwords, API keys, personal data)
+
+- Use `../csharp/csharp-coding-style.mdc` for C# coding style and conventions
+- Use `../dotnet/dotnet-testing.mdc` for testing guidelines and best practices
+- When writing XAML, clearly separate main logical UI sections with a space and a comment, for example: <!-- MAIN HEADER -->
+- Follow the rules for c# coding style in `../csharp/csharp-coding-style.mdc`
+- Follow MVVM architecture patterns
+- Use reactive programming with ReactiveUI when appropriate
+- Use ReactiveUI Source Generators to simplify and enhance ReactiveUI objects (https://github.com/reactiveui/ReactiveUI.SourceGenerators)
+- All views must implement IViewFor<TViewModel> for proper view-viewmodel binding
+- Use DynamicData library for reactive collections (https://github.com/reactivemarbles/DynamicData)
+- Write performant and memory-efficient UI code
+- Ensure cross-platform compatibility
+- Use modern Avalonia UI features and controls
 
 ## XAML Structure and Organization:
 
@@ -891,17 +899,5 @@ alwaysApply: false
       }
       ```
 
-## Documentation:
-Write extensive technical XML doc comments for the generated code.
-
-### Documentation rules:
- - Be technical, detailed but straight to the point
- - DO NOT write XML documentation comments for private members, methods, etc.
- - DO NOT write XML documentation comments if there are XML doc comments already applied but rewrite if they are not valid anymore
- - For each ViewModel, UserControl, Window, and custom control write extensive documentation what this type is for and how to use it
- - For properties in ViewModels and custom controls, write brief and concise XML documentation of what this property is for and how to use it
- - DO NOT by ANY MEANS change APIs, property, method names, etc. unless explicitly requested by the user
- - DO NOT write XML documentation comments for members implementing interfaces and abstract classes, they are already documented in the interface
- - DO NOT write XML documentation comments for overriden members, they are already documented in the base class
 
 # End of Cursor Rules File

@@ -1,26 +1,36 @@
 ---
-description: Rules and best practices for .NET build systems
+description: Comprehensive best practices for .NET build systems, CI/CD pipelines, and automated build processes
 globs: **/Directory.Build.props,**/.azure/*.yaml,**/build-system/*.yaml,**/RELEASE_NOTES.md,**/.github/workflows/*.yaml,**/*.sln,**/*.csproj
 alwaysApply: false
 ---
 
-# Cursor Rules File: .NET Build System Rules and Best Practices
+# Cursor Rules File: .NET Build System Best Practices
 
-## Core Build Philosophy
+## Role Definition
 
-### ✅ DO
-- Use native `dotnet` CLI commands as the primary build mechanism
-- Keep build scripts simple, maintainable, and cross-platform compatible
-- Use PowerShell for custom build tasks that can't be handled by `dotnet` CLI
-- Maintain clear separation between build, test, and release processes
-- Document all build prerequisites and requirements
+- Build System Architect
+- CI/CD Pipeline Expert
+- .NET Build Engineer
+- DevOps Specialist
+- Quality Assurance Lead
 
-### ❌ DON'T
-- Use complex build systems like CAKE, FAKE, or NUKE
-- Mix build and deployment logic in the same scripts
-- Hardcode environment-specific paths or settings
-- Implement complex logic in YAML pipelines (use PowerShell scripts instead)
-- Duplicate build logic across different files
+## General
+
+### Description
+
+Establish robust, maintainable build systems for .NET applications using native tooling, clear separation of concerns, and automated quality assurance. Focus on cross-platform compatibility, reproducible builds, and efficient CI/CD pipelines that ensure code quality while maintaining fast feedback loops. Implement comprehensive testing, packaging, and deployment strategies that scale with your team's needs.
+
+### Requirements
+
+**- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
+- Use native `dotnet` CLI as the primary build mechanism
+- Implement cross-platform compatible build scripts
+- Maintain clear separation between build, test, and deployment processes
+- Use PowerShell only for tasks that can't be handled by `dotnet` CLI
+- Document all build prerequisites and environment requirements
+- Implement automated quality checks and testing
+- Ensure reproducible builds across different environments
+- Follow security best practices for credential management
 
 ## Project Structure
 

@@ -25,9 +25,11 @@ maintaining developer productivity.
 
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 
+- Use `../csharp/csharp-coding-style.mdc` for C# coding style and conventions.
+- Use `../dontnet/dotnet-testing.mdc` for C# coding style and conventions.
 - Design grains for high cohesion and loose coupling
 - Implement proper state persistence and recovery patterns
-- Use ValueTask for async grain methods to optimize performance
+- Use `ValueTask` for async grain methods to optimize performance
 - Follow Orleans naming conventions and patterns
 - Implement comprehensive error handling and resilience patterns
 - Use Orleans clustering and partitioning effectively
@@ -1503,3 +1505,5 @@ public sealed class CircuitBreakerState
 This comprehensive Orleans coding style guide provides best practices for building high-performance, maintainable
 distributed applications with proper grain design, state management, communication patterns, and performance
 optimization techniques.
+
+# End of Cursor Rules File
