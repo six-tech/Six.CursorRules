@@ -19,7 +19,9 @@ Create Avalonia controls using pure C# code without XAML markup, following the s
 
 ### Requirements
 - **NEVER** place sensitive information in control code (passwords, API keys, personal data)
-- Use #[[file:steering/dotnet/csharp/csharp-coding-style.md]] for C# coding style and conventions
+
+- Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
+- Use `.cursor/rules/dotnet/general/dotnet-testing.mdc` for testing guidelines and best practices
 - Create controls using pure C# code without XAML dependencies
 - Separate control logic from styling completely
 - Controls maintain their own state without MVVM patterns

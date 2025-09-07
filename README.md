@@ -3,7 +3,9 @@
 # Six Cursor Rules
 
 A comprehensive collection of Cursor AI assistant rules designed to enhance software development quality, consistency,
-and productivity across multiple technology stacks. This project provides structured guidelines covering:
+and productivity.
+
+This project provides structured guidelines covering:
 
 - **Technical documentation** - Standards for writing and maintaining project documentation
 - **.NET ecosystem** - ASP.NET, Avalonia, Blazor, CI/CD, and related technologies
@@ -29,90 +31,97 @@ To use these Cursor Rules in your project:
 4. **Verify activation** - The AI assistant will automatically apply these rules when working in your project
 
 
-## Available Rules
+## .NET Development Rules
 
-### .NET Development
-
-#### 🔧 **General .NET**
-##### [Solution Management](rules/dotnet/general/dotnet-solution.mdc)
+### 🔧 [General .NET](rules/dotnet/general/README.md)
+#### [Solution Management](rules/dotnet/general/dotnet-solution.mdc)
 Comprehensive guidelines for maintaining .NET solutions with consistent SDK versions, shared metadata, and secure package sources. Ensures cross-project consistency, maintainability, and security using Six.SolutionTemplate as the foundation.
 
-##### [Library Development](rules/dotnet/general/dotnet-library.mdc)
+#### [Library Development](rules/dotnet/general/dotnet-library.mdc)
 Best practices for creating high-quality .NET libraries with proper metadata, SourceLink integration, and NuGet publishing. Focuses on package discoverability, documentation, and following NuGet conventions for maximum ecosystem compatibility.
 
-##### [Dependency Management](rules/dotnet/general/dotnet-dependency-management.mdc)
+#### [Dependency Management](rules/dotnet/general/dotnet-dependency-management.mdc)
 Guidelines for managing NuGet dependencies with security focus, version control, and migration strategies. Addresses package vulnerabilities, license compliance, and maintaining healthy dependency graphs across .NET projects.
 
-##### [Testing Best Practices](rules/dotnet/general/dotnet-testing.mdc)
+#### [Testing Best Practices](rules/dotnet/general/dotnet-testing.mdc)
 Comprehensive testing strategies including unit, integration, and performance testing with xUnit, BenchmarkDotNet, and Coverlet. Emphasizes test isolation, Arrange-Act-Assert patterns, and automated testing workflows.
 
-##### [Benchmarking Guidelines](rules/dotnet/general/dotnet-benchmarking.mdc)
+#### [Benchmarking Guidelines](rules/dotnet/general/dotnet-benchmarking.mdc)
 Performance benchmarking best practices using BenchmarkDotNet for measuring and optimizing .NET code performance. Covers memory analysis, async performance testing, and CI/CD integration for continuous performance monitoring.
 
-##### [Documentation Standards](rules/dotnet/general/dotnet-docs.mdc)
+#### [Documentation Standards](rules/dotnet/general/dotnet-docs.mdc)
 Standards for writing technical documentation in `docs/rules/content/docs/` with proper structure and formatting. Ensures consistent documentation quality and discoverability across .NET projects.
 
 
-#### 💻 **C#**
-##### [C# Coding Style](rules/dotnet/csharp/csharp-coding-style.mdc)
+### 💻 [C#](rules/dotnet/csharp/README.md)
+#### [C# Coding Style](rules/dotnet/csharp/csharp-coding-style.mdc)
 Guidelines for writing clean, maintainable, and idiomatic C# code with functional patterns and modern language features. Emphasizes readability, proper abstractions, and leveraging C# 13+ features for optimal code quality.
 
-##### [C# Scripting](rules/dotnet/csharp/csharp-scripting-style.mdc)
+#### [C# Scripting](rules/dotnet/csharp/csharp-scripting-style.mdc)
 Best practices for C# scripting with .NET, including single-file applications, package directives, and rich console output. Covers Spectre.Console for CLI applications and CliWrap for external process management.
 
 
 
-#### 🏗️ **ASP.NET Core Development**
-##### [ASP.NET Core API](rules/dotnet/aspnet/aspnet-api.mdc)
+### 🏗️ [ASP.NET Core Development](rules/dotnet/aspnet/README.md)
+#### [ASP.NET Core API](rules/dotnet/aspnet/aspnet-api.mdc)
 Best practices for building secure, scalable ASP.NET Core APIs using Minimal APIs and modern patterns. Covers dependency injection, error handling, security, performance optimization, and comprehensive API documentation.
 
-##### [Fast Endpoints API](rules/dotnet/aspnet/aspnet-api-fast-endpoints.mdc)
-Guidelines for building high-performance ASP.NET Core APIs using Fast Endpoints framework. Focuses on endpoint architecture, validation, security, performance optimization, and comprehensive testing strategies.
+#### [Fast Endpoints API](rules/dotnet/aspnet/aspnet-api-fast-endpoints.mdc)
+Guidelines for building high-performance ASP.NET Core APIs using the Fast Endpoints framework. Focuses on endpoint architecture, validation, security, performance optimization, and comprehensive testing strategies.
 
-##### [Orleans Development](rules/dotnet/aspnet/aspnet-orleans.mdc)
-Best practices for developing distributed applications using Microsoft Orleans framework. Covers grain development, clustering, persistence, and integration with .NET Aspire for local orchestration.
+#### [Orleans Development](rules/dotnet/aspnet/aspnet-orleans.mdc)
+Best practices for developing distributed applications using the Microsoft Orleans framework. Covers grain development, 
+clustering, persistence, and integration with .NET Aspire for local orchestration.
 
-#### 🎨 **UI & Desktop Development**
-##### [Avalonia MVVM](rules/dotnet/avalonia/avalonia-mvvm.mdc)
-Comprehensive guidelines for building cross-platform desktop applications using Avalonia UI with MVVM architecture. Covers reactive programming with ReactiveUI, XAML best practices, and cross-platform compatibility for Windows, macOS, and Linux.
 
-##### [Blazor Development](rules/dotnet/blazor/blazor-coding-style.mdc)
+### 🎨 [Avalonia UI](rules/dotnet/avalonia/README.md)
+#### [Avalonia Controls](rules/dotnet/avalonia/avalonia-controls.mdc)
+Comprehensive guidelines for building cross-platform desktop controls using Avalonia UI and pure code. Covers control design, data binding, styles, and theming for consistent and maintainable UI development.
+
+#### [Avalonia MVVM](rules/dotnet/avalonia/avalonia-mvvm.mdc)
+Comprehensive guidelines for building cross-platform desktop applications using Avalonia UI with MVVM architecture. Covers reactive programming with ReactiveUI, and cross-platform compatibility for Windows, macOS, and Linux.
+
+#### [Avalonia XAML](rules/dotnet/avalonia/avalonia-xaml.mdc)
+Comprehensive guidelines for building cross-platform desktop user interfaces with XAML in Avalonia. Covers layout design, data binding, styles, and theming for consistent and maintainable UI development.
+
+### 🎨 [Blazor](rules/dotnet/blazor/README.md)
+#### [Blazor Development](rules/dotnet/blazor/blazor-coding-style.mdc)
 Best practices for building modern web applications with Blazor, covering component architecture, data binding, performance optimization, and integration with ASP.NET Core APIs for full-stack development.
 
 
 
 
-#### 🔄 **CI/CD & DevOps**
-##### [.NET Build System](rules/dotnet/ci-cd/dotnet-gh-workflow-build.mdc)
+### 🔄 [CI/CD & DevOps](rules/dotnet/ci-cd/README.md)
+#### [.NET Build System](rules/dotnet/ci-cd/dotnet-gh-workflow-build.mdc)
 Comprehensive best practices for .NET build systems, CI/CD pipelines, and automated processes. Covers cross-platform builds, version management, testing integration, and both GitHub Actions, and Azure DevOps pipelines.
 
-##### [Code Signing](rules/dotnet/ci-cd/dotnet-gh-workflow-code-signing.mdc)
+#### [Code Signing](rules/dotnet/ci-cd/dotnet-gh-workflow-code-signing.mdc)
 Security practices for .NET code signing with SignClient integration in CI/CD pipelines. Ensures authenticity, integrity, and compliance through automated signing workflows and certificate management.
 
-##### [NuGet Publishing](rules/dotnet/ci-cd/dotnet-gh-workflow-nuget-publishing.mdc)
+#### [NuGet Publishing](rules/dotnet/ci-cd/dotnet-gh-workflow-nuget-publishing.mdc)
 Best practices for publishing high-quality NuGet packages with proper versioning, metadata, and distribution. Covers semantic versioning, package validation, security, and automated publishing workflows.
 
 
 
-### 🌐 **Web Technologies**
-#### [TypeScript Development](rules/web/typescript/typescript-coding-style.mdc)
+## 🌐 [Web Technology Rules](rules/web/README.md)
+### [TypeScript Development](rules/web/typescript/typescript-coding-style.mdc)
 Guidelines for writing type-safe, maintainable TypeScript code with modern JavaScript features and functional patterns. Focuses on proper typing, performance optimization, and scalable architecture for web applications.
 
-#### [Astro Framework](rules/web/astro/astro-coding-style.mdc)
+### [Astro Framework](rules/web/astro/astro-coding-style.mdc)
 Best practices for building fast, content-focused websites using Astro framework. Covers component development, performance optimization, and integration with modern web technologies for optimal user experience.
 
 
 
-### 📋 **Specification Driven Development**
+## 📋 [Specification Driven Development Rules](rules/specs-generation/README.md)
 #### [Specification-Driven Development](rules/specs-generation/coding-by-spec.mdc)
 Cursor-based approach that simulates specification-driven development similar to Kiro, enabling structured software development through AI-assisted specification files. Uses EARS notation for clear requirements, technical design documentation, and iterative refinement processes to bridge the gap between requirements and implementation.
 
 
-### 📋 **Technical Documentation**
-#### [README Documentation](rules/documentation/readme-md.mdc)
+## 📋 [Technical Documentation Rules](rules/documentation/README.md)
+### [README Documentation](rules/documentation/readme-md.mdc)
 Standards for writing comprehensive README files with proper structure, formatting, and content organization. Ensures consistent documentation quality across all projects and repositories.
 
-#### [AI Agents Documentation](rules/documentation/agents-md.mdc)
+### [AI Agents Documentation](rules/documentation/agents-md.mdc)
 Guidelines for documenting AI agents and their capabilities within development projects. Ensures clear communication of AI-assisted workflows and automated processes.
 
 

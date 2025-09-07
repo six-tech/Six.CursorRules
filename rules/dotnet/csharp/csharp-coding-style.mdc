@@ -32,9 +32,10 @@ coupling. Prefer functional patterns and immutable data where appropriate and ke
 - Use object-oriented and functional programming patterns as appropriate
 - Use C# 13+ features when appropriate (e.g., record types, pattern matching, null-coalescing assignment, collection
   expressions)
+- Use `.cursor/rules/dotnet/general/dotnet-testing.mdc` for testing guidelines and best practices
 - **DOCUMENTATION REQUIREMENT**: If new code has been added or existing code modified, documentation for that part MUST
   be added/updated in `docs/src/content/docs/` in the appropriate directory and following the rules specified for
-  documentation writing in `../general/dotnet/dotnet-docs.mdc`
+  documentation writing in `.cursor/rules/dotnet/general/dotnet/dotnet-docs.mdc`
 - **DOCUMENTATION LOOKUP REQUIREMENT**: Before starting to write any code, the agent should try to find existing
   documentation in `docs/src/content/docs/` that relates to the task. After searching, if there are docs that help, the
   agent MUST use them to gather additional knowledge and context

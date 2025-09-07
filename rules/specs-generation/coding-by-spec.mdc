@@ -24,6 +24,9 @@ Establish a structured approach to software development using specification-driv
 
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 
+- If writing c# code examples, use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
+- If writing Astro.js code examples, use `.cursor/rules/web/astro/astro-coding-style.mdc` for C# coding style and conventions
+- If writing Typescript code examples, use `.cursor/rules/web/typescript/typescript-coding-style.mdc` for C# coding style and conventions
 - Generate three core specification files for each feature: requirements.md, design.md, and tasks.md
 - Use structured EARS notation for writing clear, testable requirements
 - Document technical architecture with sequence diagrams and implementation considerations

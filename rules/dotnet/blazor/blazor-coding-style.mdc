@@ -26,8 +26,8 @@ deliver optimal user experiences across different deployment scenarios.
 ### Requirements
 
 - **NEVER** place sensitive information in generated code (passwords, API keys, personal data)
-- Use `../csharp/csharp-coding-style.mdc` for C# coding style and conventions
-- Use `../dotnet/dotnet-testing.mdc` for testing guidelines and best practices
+- Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
+- Use `.cursor/rules/dotnet/general/dotnet-testing.mdc` for testing guidelines and best practices
 - Follow Blazor component naming conventions and file organization patterns
 - Implement proper state management and data flow patterns
 - Use dependency injection for services and maintain testability

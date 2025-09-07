@@ -25,8 +25,8 @@ handling throughout the application lifecycle.
 ### Requirements
 
 - **NEVER** place sensitive information in generated code (passwords, API keys, personal data)
-- Use `../csharp/csharp-coding-style.mdc` for C# coding style and conventions
-- Use `../dotnet/dotnet-testing.mdc` for testing guidelines and best practices
+- Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
+- Use `.cursor/rules/dotnet/general/dotnet-testing.mdc` for testing guidelines and best practices
 - **ALWAYS** use Minimal APIs instead of traditional controllers
 - Implement dependency injection for loose coupling and testability
 - Leverage built-in ASP.NET Core features and middleware

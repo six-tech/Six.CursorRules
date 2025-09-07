@@ -1,6 +1,6 @@
 ---
 description: Best practices for designing benchmarks and measuring .NET performance
-globs: benchmarks/Directory.Build.props, *.Benchmark.csproj, *.cs
+globs: benchmarks/Directory.Build.props, *.Benchmark.csproj, benchmarks/**/*.cs
 alwaysApply: false
 ---
 
@@ -26,6 +26,7 @@ regression testing to ensure consistent and reliable performance measurements.
 ### Requirements
 
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
+- Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
 - Use `BenchmarkDotNet` for micro-benchmarks and performance testing
 - Ensure consistent test environments and hardware configurations
 - Follow scientific methodology with proper baseline comparisons

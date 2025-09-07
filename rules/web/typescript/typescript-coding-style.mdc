@@ -1,6 +1,6 @@
 ---
 description: This file provides guidelines for writing clean, maintainable TypeScript code with a focus on functional patterns, proper typing, and modern JavaScript features.
-globs: *.ts, *.css, *.scss
+globs: docs/**/*.ts, docs/**/*.css, docs/**/*.scss
 alwaysApply: false
 ---
 

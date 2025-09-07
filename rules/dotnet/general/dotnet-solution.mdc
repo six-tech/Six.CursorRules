@@ -31,11 +31,11 @@ Full documentation: [Six.SolutionTemplate](https://six-tech.github.io/Six.Soluti
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 - Maintain a `global.json` for SDK version control
 - Maintain master `Directory.Build.props` in solution root for common build properties
-- Use master `Directory.Build.props` in solution root when dealing with `libs/Directory.Build.props`, `tests/Directory.
+- Use master `Directory.Build.props` in solution root when dealing with `libs/Directory.Build.props`, `apps/Directory.Build.props`, `tests/Directory.
 Build.props`, and `benchmarks/Directory.Build.props` 
 - Configure secure and reliable package sources in `nuget.config`
-- Write and maintain AGENTS.md for AI agents using `../../documentation/agents-md.mdc` rules
-- Write and maintain README.md docs `../../documentation/readme-md.mdc` rules
+- Write and maintain AGENTS.md for AI agents using `.cursor/rules/documentation/agents-md.mdc` rules
+- Write and maintain README.md docs `.cursor/rules/documentation/readme-md.mdc` rules
 - Prefer `.slnx` format over traditional `.sln`
 
 

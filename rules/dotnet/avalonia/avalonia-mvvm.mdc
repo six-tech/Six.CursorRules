@@ -19,8 +19,8 @@ Avalonia C# code should be written to maximize readability, maintainability, and
 
 ### Requirements
 - **NEVER** place sensitive information in generated code (passwords, API keys, personal data)
-- Use steering rules from #[[file:.kiro/steering/dotnet/csharp/csharp-coding-style.md]] for C# coding style and conventions
-- Use steering rules from #[[file:.kiro/steering/dotnet/general/dotnet-testing.md]] for testing guidelines and best practices
+- Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
+- Use `.cursor/rules/dotnet/general/dotnet-testing.mdc` for testing guidelines and best practices
 - Follow MVVM architecture patterns
 - Use reactive programming with ReactiveUI when appropriate
 - Use ReactiveUI Source Generators to simplify and enhance ReactiveUI objects

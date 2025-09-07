@@ -25,7 +25,7 @@ Also, since this is pure .NET, we can leverage the full power of .NET and availa
 
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 
-- ALWAYS: Use `csharp-coding-style.mdc` as the default style rule. This rule extends it.
+- Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
 - ALWAYS: Use `.NET 10` or later.
 - ALWAYS: Start all scripts with `#!/usr/bin/env dotnet`
 - ALWAYS: Import the necessary packages with c# single file app importing format: `#:package Spectre.Console@0.49.1`
@@ -33,7 +33,7 @@ Also, since this is pure .NET, we can leverage the full power of .NET and availa
 - ALWAYS use `CliWrap` library for executing external processes.
 - **DOCUMENTATION REQUIREMENT**: If new code has been added or existing code modified, documentation for that part MUST
   be added/updated in `docs/src/content/docs/` in the appropriate directory and following the rules specified for
-  documentation writing in `../general/dotnet/docs.mdc`
+  documentation writing in `.cursor/rules/dotnet/general/dotnet/dotnet-docs.mdc`
 - **DOCUMENTATION LOOKUP REQUIREMENT**: Before starting to write any code, the agent should try to find existing
   documentation in `docs/src/content/docs/` that relates to the task. After searching, if there are docs that help, the
   agent MUST use them to gather additional knowledge and context

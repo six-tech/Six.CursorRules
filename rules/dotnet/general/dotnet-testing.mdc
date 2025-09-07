@@ -21,6 +21,7 @@ with proper isolation and clear patterns for test organization and execution.
 ### Requirements
 
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
+- Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
 - Use xUnit as the testing framework
 - Ensure test isolation
 - Follow consistent patterns

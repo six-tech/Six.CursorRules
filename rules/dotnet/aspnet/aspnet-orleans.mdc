@@ -25,8 +25,8 @@ maintaining developer productivity.
 
 **- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 
-- Use `../csharp/csharp-coding-style.mdc` for C# coding style and conventions.
-- Use `../dotnet/dotnet-testing.mdc` for C# coding style and conventions.
+- Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
+- Use `.cursor/rules/dotnet/general/dotnet-testing.mdc` for testing guidelines and best practices
 - Design grains for high cohesion and loose coupling
 - Implement proper state persistence and recovery patterns
 - Use `ValueTask` for async grain methods to optimize performance

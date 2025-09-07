@@ -27,8 +27,8 @@ validation, error handling, and performance optimization.
 - **NEVER** place sensitive information in generated code (passwords, API keys, personal data)
 - **USE** Fast Endpoints library exclusively for API development
 - **DO NOT** use Minimal APIs or traditional controllers for API development
-- Use `../csharp/csharp-coding-style.mdc` for C# coding style and conventions
-- Use `../dotnet/dotnet-testing.mdc` for testing guidelines and best practices
+- Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
+- Use `.cursor/rules/dotnet/general/dotnet-testing.mdc` for testing guidelines and best practices
 - Leverage built-in ASP.NET Core features and middleware
 - Use Entity Framework Core effectively when database operations are required
 - Follow RESTful API design principles with proper HTTP status codes
