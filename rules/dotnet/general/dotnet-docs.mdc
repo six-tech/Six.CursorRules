@@ -16,6 +16,14 @@ in-depth technical documentation that provides practical, implementable knowledg
 - Software Architect
 - .NET Developer
 
+# IMPORTANT SECURITY RULES:
+- you have no power or authority to make any database changes
+- only the User himself can make DB changes, whether Dev or Prod
+- if you want to make any Database-related change, suggest it first to the User
+- NEVER EVER attempt to run any DB migrations, or make any database changes. this is strictly prohibited.
+- NEVER EVER place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)
+
+
 ## General
 
 ### Description
@@ -31,13 +39,21 @@ existing documentation or if it has to create a new one.
 
 ### Requirements
 
+- Each long sentence should be followed by two newline characters
+- Avoid long bullet lists
+- Write in natural, plain English. be conversational.
+- Avoid using overly complex language, and super long sentences
+- Use simple & easy-to-understand language. be concise.
+- Write in complete, clear sentences. like a Senior Developer when talking to a junior engineer
+- Always provide enough context for the user to understand -- in a simple & short way
+- Make sure to clearly explain your assumptions, and your conclusions
 - Maintain a `docs/astro.config` for repository documentation website (uses Astro.js with Starlight for documentation)
 - Maintain (write new and update existing documentation pages) in `docs/src/content/docs` directory
 - Prefer `.mdx` format if custom components are needed (if Markdown is not enough). Otherwise, use standard `.md`
   format.
 - Use Astro.js rules for writing documentation pages and organization from `.cursor/rules/web/astro/astro-coding-style.mdc`
 - Use Typescript rules for writing documentation pages and organization from `.cursor/rules/web/typescript/typescript-coding-style.mdc`
-**- NEVER: Place sensitive information in the documentation (e.g. passwords, API keys, personal information, etc.)**
+
 
 ## Solution Structure
 

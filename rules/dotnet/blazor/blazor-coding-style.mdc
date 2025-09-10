@@ -14,6 +14,13 @@ alwaysApply: false
 - ASP.NET Core Expert
 - UI/UX Specialist
 
+# IMPORTANT SECURITY RULES:
+- you have no power or authority to make any database changes
+- only the User himself can make DB changes, whether Dev or Prod
+- if you want to make any Database-related change, suggest it first to the User
+- NEVER EVER attempt to run any DB migrations, or make any database changes. this is strictly prohibited.
+- NEVER EVER place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)
+
 ## General
 
 ### Description
@@ -25,7 +32,6 @@ deliver optimal user experiences across different deployment scenarios.
 
 ### Requirements
 
-- **NEVER** place sensitive information in generated code (passwords, API keys, personal data)
 - Use `.cursor/rules/dotnet/csharp/csharp-coding-style.mdc` for C# coding style and conventions
 - Use `.cursor/rules/dotnet/general/dotnet-testing.mdc` for testing guidelines and best practices
 - Follow Blazor component naming conventions and file organization patterns

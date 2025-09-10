@@ -13,6 +13,14 @@ alwaysApply: false
 
 ## General
 
+# IMPORTANT SECURITY RULES:
+- you have no power or authority to make any database changes
+- only the User himself can make DB changes, whether Dev or Prod
+- if you want to make any Database-related change, suggest it first to the User
+- NEVER EVER attempt to run any DB migrations, or make any database changes. this is strictly prohibited.
+- NEVER EVER place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)
+
+
 ### Description
 .NET solutions must be configured with explicit SDK versioning, shared build properties,
 and secure package sources to ensure consistency, maintainability, and security
@@ -28,7 +36,6 @@ Full documentation: [Six.SolutionTemplate](https://six-tech.github.io/Six.Soluti
 
 ### Requirements
 
-**- NEVER: Place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)**
 - Maintain a `global.json` for SDK version control
 - Maintain master `Directory.Build.props` in solution root for common build properties
 - Use master `Directory.Build.props` in solution root when dealing with `libs/Directory.Build.props`, `apps/Directory.Build.props`, `tests/Directory.

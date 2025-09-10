@@ -35,80 +35,83 @@ To use these Cursor Rules in your project:
 
 ### 🔧 [General .NET](rules/dotnet/general/README.md)
 #### [Solution Management](rules/dotnet/general/dotnet-solution.mdc)
-Comprehensive guidelines for maintaining .NET solutions with consistent SDK versions, shared metadata, and secure package sources. Ensures cross-project consistency, maintainability, and security using Six.SolutionTemplate as the foundation.
+Rules for maintaining .NET solutions with consistent SDK versions, shared metadata, and secure package sources. Ensures 
+cross-project consistency, maintainability, and security using Six.SolutionTemplate as the foundation.
 
 #### [Library Development](rules/dotnet/general/dotnet-library.mdc)
-Best practices for creating high-quality .NET libraries with proper metadata, SourceLink integration, and NuGet publishing. Focuses on package discoverability, documentation, and following NuGet conventions for maximum ecosystem compatibility.
+Rules for creating high-quality .NET libraries with proper metadata, SourceLink integration, and NuGet publishing. Focuses on package discoverability, documentation, and following NuGet conventions for maximum ecosystem compatibility.
 
 #### [Dependency Management](rules/dotnet/general/dotnet-dependency-management.mdc)
-Guidelines for managing NuGet dependencies with security focus, version control, and migration strategies. Addresses package vulnerabilities, license compliance, and maintaining healthy dependency graphs across .NET projects.
+Rules for managing NuGet dependencies with security focus, version control, and migration strategies. Addresses package vulnerabilities, license compliance, and maintaining healthy dependency graphs across .NET projects.
 
 #### [Testing Best Practices](rules/dotnet/general/dotnet-testing.mdc)
-Comprehensive testing strategies including unit, integration, and performance testing with xUnit, BenchmarkDotNet, and Coverlet. Emphasizes test isolation, Arrange-Act-Assert patterns, and automated testing workflows.
+Rules for testing strategies including unit, integration, and performance testing with xUnit, BenchmarkDotNet, and 
+Coverlet. Emphasizes test isolation, Arrange-Act-Assert patterns, and automated testing workflows.
 
 #### [Benchmarking Guidelines](rules/dotnet/general/dotnet-benchmarking.mdc)
-Performance benchmarking best practices using BenchmarkDotNet for measuring and optimizing .NET code performance. Covers memory analysis, async performance testing, and CI/CD integration for continuous performance monitoring.
+Rules for performance benchmarking best practices using BenchmarkDotNet for measuring and optimizing .NET code 
+performance. Covers memory analysis, async performance testing, and CI/CD integration for continuous performance monitoring.
 
 #### [Documentation Standards](rules/dotnet/general/dotnet-docs.mdc)
-Standards for writing technical documentation in `docs/rules/content/docs/` with proper structure and formatting. Ensures consistent documentation quality and discoverability across .NET projects.
+Rules for writing technical documentation in `docs/rules/content/docs/` with proper structure and formatting. Ensures consistent documentation quality and discoverability across .NET projects.
 
 
 ### 💻 [C#](rules/dotnet/csharp/README.md)
 #### [C# Coding Style](rules/dotnet/csharp/csharp-coding-style.mdc)
-Guidelines for writing clean, maintainable, and idiomatic C# code with functional patterns and modern language features. Emphasizes readability, proper abstractions, and leveraging C# 13+ features for optimal code quality.
+Rules for writing clean, maintainable, and idiomatic C# code with functional patterns and modern language features. Emphasizes readability, proper abstractions, and leveraging C# 13+ features for optimal code quality.
 
 #### [C# Scripting](rules/dotnet/csharp/csharp-scripting-style.mdc)
-Best practices for C# scripting with .NET, including single-file applications, package directives, and rich console output. Covers Spectre.Console for CLI applications and CliWrap for external process management.
+Rules for C# scripting with .NET, including single-file applications, package directives, and rich console output. Covers Spectre.Console for CLI applications and CliWrap for external process management.
 
 
 
 ### 🏗️ [ASP.NET Core Development](rules/dotnet/aspnet/README.md)
 #### [ASP.NET Core API](rules/dotnet/aspnet/aspnet-api.mdc)
-Best practices for building secure, scalable ASP.NET Core APIs using Minimal APIs and modern patterns. Covers dependency injection, error handling, security, performance optimization, and comprehensive API documentation.
+Rules for building secure, scalable ASP.NET Core APIs using Minimal APIs and modern patterns. Covers dependency injection, error handling, security, performance optimization, and comprehensive API documentation.
 
 #### [Fast Endpoints API](rules/dotnet/aspnet/aspnet-api-fast-endpoints.mdc)
-Guidelines for building high-performance ASP.NET Core APIs using the Fast Endpoints framework. Focuses on endpoint architecture, validation, security, performance optimization, and comprehensive testing strategies.
+Rules for building high-performance ASP.NET Core APIs using the Fast Endpoints framework. Focuses on endpoint architecture, validation, security, performance optimization, and comprehensive testing strategies.
 
 #### [Orleans Development](rules/dotnet/aspnet/aspnet-orleans.mdc)
-Best practices for developing distributed applications using the Microsoft Orleans framework. Covers grain development, 
+Rules for developing distributed applications using the Microsoft Orleans framework. Covers grain development, 
 clustering, persistence, and integration with .NET Aspire for local orchestration.
 
 
 ### 🎨 [Avalonia UI](rules/dotnet/avalonia/README.md)
 #### [Avalonia Controls](rules/dotnet/avalonia/avalonia-controls.mdc)
-Comprehensive guidelines for building cross-platform desktop controls using Avalonia UI and pure code. Covers control design, data binding, styles, and theming for consistent and maintainable UI development.
+Rules for building cross-platform desktop controls using Avalonia UI and pure code. Covers control design, data binding, styles, and theming for consistent and maintainable UI development.
 
 #### [Avalonia MVVM](rules/dotnet/avalonia/avalonia-mvvm.mdc)
-Comprehensive guidelines for building cross-platform desktop applications using Avalonia UI with MVVM architecture. Covers reactive programming with ReactiveUI, and cross-platform compatibility for Windows, macOS, and Linux.
+Rules for building cross-platform desktop applications using Avalonia UI with MVVM architecture. Covers reactive programming with ReactiveUI, and cross-platform compatibility for Windows, macOS, and Linux.
 
 #### [Avalonia XAML](rules/dotnet/avalonia/avalonia-xaml.mdc)
-Comprehensive guidelines for building cross-platform desktop user interfaces with XAML in Avalonia. Covers layout design, data binding, styles, and theming for consistent and maintainable UI development.
+Rules for building cross-platform desktop user interfaces with XAML in Avalonia. Covers layout design, data binding, styles, and theming for consistent and maintainable UI development.
 
 ### 🎨 [Blazor](rules/dotnet/blazor/README.md)
 #### [Blazor Development](rules/dotnet/blazor/blazor-coding-style.mdc)
-Best practices for building modern web applications with Blazor, covering component architecture, data binding, performance optimization, and integration with ASP.NET Core APIs for full-stack development.
+Rules for building modern web applications with Blazor, covering component architecture, data binding, performance optimization, and integration with ASP.NET Core APIs for full-stack development.
 
 
 
 
 ### 🔄 [CI/CD & DevOps](rules/dotnet/ci-cd/README.md)
 #### [.NET Build System](rules/dotnet/ci-cd/dotnet-gh-workflow-build.mdc)
-Comprehensive best practices for .NET build systems, CI/CD pipelines, and automated processes. Covers cross-platform builds, version management, testing integration, and both GitHub Actions, and Azure DevOps pipelines.
+Rules for .NET build systems, CI/CD pipelines, and automated processes. Covers cross-platform builds, version management, testing integration, and both GitHub Actions, and Azure DevOps pipelines.
 
 #### [Code Signing](rules/dotnet/ci-cd/dotnet-gh-workflow-code-signing.mdc)
-Security practices for .NET code signing with SignClient integration in CI/CD pipelines. Ensures authenticity, integrity, and compliance through automated signing workflows and certificate management.
+Rules for .NET code signing with SignClient integration in CI/CD pipelines. Ensures authenticity, integrity, and compliance through automated signing workflows and certificate management.
 
 #### [NuGet Publishing](rules/dotnet/ci-cd/dotnet-gh-workflow-nuget-publishing.mdc)
-Best practices for publishing high-quality NuGet packages with proper versioning, metadata, and distribution. Covers semantic versioning, package validation, security, and automated publishing workflows.
+Rules for publishing high-quality NuGet packages with proper versioning, metadata, and distribution. Covers semantic versioning, package validation, security, and automated publishing workflows.
 
 
 
 ## 🌐 [Web Technology Rules](rules/web/README.md)
 ### [TypeScript Development](rules/web/typescript/typescript-coding-style.mdc)
-Guidelines for writing type-safe, maintainable TypeScript code with modern JavaScript features and functional patterns. Focuses on proper typing, performance optimization, and scalable architecture for web applications.
+Rules for writing type-safe, maintainable TypeScript code with modern JavaScript features and functional patterns. Focuses on proper typing, performance optimization, and scalable architecture for web applications.
 
 ### [Astro Framework](rules/web/astro/astro-coding-style.mdc)
-Best practices for building fast, content-focused websites using Astro framework. Covers component development, performance optimization, and integration with modern web technologies for optimal user experience.
+Rules for building fast, content-focused websites using Astro framework. Covers component development, performance optimization, and integration with modern web technologies for optimal user experience.
 
 
 
@@ -118,11 +121,16 @@ Cursor-based approach that simulates specification-driven development similar to
 
 
 ## 📋 [Technical Documentation Rules](rules/documentation/README.md)
+
+### [Tech Writer](rules/documentation/tech-writer.mdc)
+Steering rules for writing comprehensive technical content for other developers.
+
 ### [README Documentation](rules/documentation/readme-md.mdc)
-Standards for writing comprehensive README files with proper structure, formatting, and content organization. Ensures consistent documentation quality across all projects and repositories.
+Rules writing comprehensive README files with proper structure, formatting, and content organization. Ensures consistent documentation quality across all projects and repositories.
 
 ### [AI Agents Documentation](rules/documentation/agents-md.mdc)
-Guidelines for documenting AI agents and their capabilities within development projects. Ensures clear communication of AI-assisted workflows and automated processes.
+Rules for documenting AI agents and their capabilities within development projects. Ensures clear communication of 
+AI-assisted workflows and automated processes.
 
 
 
@@ -224,9 +232,9 @@ Place new rules in appropriate directories:
 ```
 rules/
 ├── dotnet/           # .NET ecosystem rules
-├── web/             # Web technologies
-├── specs-generation/# Specification rules
-└── documentation/   # Documentation standards
+├── web/              # Web technologies
+├── specs-generation/ # Specification rules
+└── documentation/    # Documentation standards
 ```
 
 ### Best Practices for Rule Creation

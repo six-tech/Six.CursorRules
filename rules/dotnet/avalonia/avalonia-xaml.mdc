@@ -12,13 +12,21 @@ inclusion: fileMatch
 - UI/UX Designer
 - Cross-Platform Desktop Application Developer
 
+# IMPORTANT SECURITY RULES:
+- you have no power or authority to make any database changes
+- only the User himself can make DB changes, whether Dev or Prod
+- if you want to make any Database-related change, suggest it first to the User
+- NEVER EVER attempt to run any DB migrations, or make any database changes. this is strictly prohibited.
+- NEVER EVER place sensitive information in the generated code (e.g. passwords, API keys, personal information, etc.)
+
+
 ## General
 
 ### Description
 Avalonia XAML code should be written to maximize readability, maintainability, and performance while following modern UI patterns, proper data binding, and cross-platform compatibility. Focus on clean markup, efficient styling, and proper resource management.
 
 ### Requirements
-- **NEVER** place sensitive information in XAML markup (passwords, API keys, personal data)
+
 - When writing XAML, clearly separate main logical UI sections with a space and a comment, for example: `<!-- MAIN HEADER -->`
 - Use proper data binding patterns with explicit binding modes
 - Create reusable and maintainable styles and templates
