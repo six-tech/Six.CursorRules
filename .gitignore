@@ -98,9 +98,6 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
-# Rider files
-.idea
-
 # Chutzpah Test files
 _Chutzpah*
 
@@ -133,7 +130,6 @@ $tf/
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper
-*.DotSettings.user
 
 # TeamCity is a build add-in
 _TeamCity*
@@ -288,6 +284,7 @@ FakesAssemblies/
 .ntvs_analysis.dat
 node_modules/
 
+
 # Visual Studio 6 build log
 *.plg
 
@@ -398,6 +395,7 @@ FodyWeavers.xsd
 *.msp
 
 # JetBrains Rider
+.idea/
 *.sln.iml
 
 # Docs
