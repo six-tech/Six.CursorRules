@@ -55,6 +55,7 @@ existing documentation or if it has to create a new one.
 - Use Typescript rules for writing documentation pages and organization from `.cursor/rules/web/typescript/typescript-coding-style.mdc`
 
 
+
 ## Solution Structure
 
 > [!IMPORTANT]
@@ -123,56 +124,187 @@ ensuring each step is properly completed before moving to the next.
 - Each page should provide code examples of concrete usage.
 - Each page should provide DO-s and DON'T-s for security or performance important sections. Always guide the user how to properly implement secure and performant solutions.
 
-## Documentation Best Practices and Examples
 
-### DO and DON'T Guidelines
 
-#### Page Structure and Organization
+# Documentation Best Practices and Examples
 
-##### ✅ DO: Use Logical Chapter-Based Organization
+
+## Page Structure and Organization
+
+
+### ✅ DO: First H1 heading should be 'Introduction' or 'Overview' or similar
+
+```
+# Introduction
+Content for introduction to the chapter
+```
+
+### ❌ DON'T: Never the name of the page or something else for first H1 heading
+
+If page name is: 'My Special Class', DO NOT use it for first H1 heading like this:
+
+```
+# My Special Class
+```
+
+----
+
+
+
+### ✅ DO: Write normal headings when describing properties, methods, and similar
+
+```
+## This is some method name
+```
+
+### ❌ DON'T: Never use `` in headings
+
+```
+## This is some `method name`
+```
+
+----
+
+
+### ✅ DO: H1 MUST be used for all top-level headings
+All top level headings should be H1:
+
+```markdown
+
+# Overview
+This guide covers implementing secure API authentication using JWT tokens.
+
+# Basic Setup
+Configure your authentication middleware...
+
+# Token Management
+Handle token generation, validation, and refresh...
+
+# Advanced Security
+Implement rate limiting, token rotation, and security headers...
+
+# Integration Examples
+Real-world integration with your API endpoints...
+```
+
+### ❌ DON'T: Nest all headings under first H1 heading
+
+```markdown
+# Introduction
+
+## Everything About Our API
+Our API does authentication, user management, data processing, caching, logging, monitoring, 
+deployment, scaling, security, performance optimization, error handling, testing, documentation, support, and more...
+
+## Authentication
+some content
+
+## Security
+some content
+
+## Performance
+some content
+```
+
+
+----
+
+
+### ✅ DO: Use Logical Chapter-Based Organization
 Organize complex features into multiple focused pages that build upon each other:
 
 ```markdown
 # API Authentication
 
-## Overview
+# Overview
 This guide covers implementing secure API authentication using JWT tokens.
 
-## Basic Setup
+# Basic Setup
 Configure your authentication middleware...
 
-## Token Management
+# Token Management
 Handle token generation, validation, and refresh...
 
-## Advanced Security
+# Advanced Security
 Implement rate limiting, token rotation, and security headers...
 
-## Integration Examples
+# Integration Examples
 Real-world integration with your API endpoints...
 ```
 
-##### ❌ DON'T: Create Monolithic Single Pages
+### ❌ DON'T: Create Monolithic Single Pages
 Avoid overwhelming readers with everything in one long document:
 
 ```markdown
 # Everything About Our API
 
-## Introduction
+# Introduction
 Our API does authentication, user management, data processing, caching, logging, monitoring, deployment, scaling, security, performance optimization, error handling, testing, documentation, support, and more...
 
-## Authentication
+# Authentication
 [500 lines of mixed content about basic auth, JWT, OAuth, SAML, custom providers...]
 
-## Security
+# Security
 [300 lines mixing authentication security with data encryption, HTTPS, CORS, CSRF...]
 
-## Performance
+# Performance
 [400 lines covering caching, database optimization, API rate limiting, CDN setup...]
 ```
 
-#### Writing Style and Clarity
+----
 
-##### ✅ DO: Write Technical, Implementation-Focused Content
+### ✅ DO: When documenting API Reference pay attention to structure and organize members into table
+
+- Write type name as title (as heading element)
+- Describe the type and explain for what it is used.
+- Organize members into nicely formatted table
+- Provide clear, short but explanatory examples
+
+```
+# SvgQueryBuilder Class
+
+A fluent API for querying and transforming SVG elements with method chaining support.
+
+# Methods
+
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| **Selection Methods** | | | |
+| `Select(predicate)` | `predicate`: `Func<SvgNode, bool>` - Function to test each node | `SvgQueryBuilder` | Selects nodes that match the specified predicate |
+| `SelectAttributes(keyPredicate, action)` | `keyPredicate`: `Func<string, bool>` - Function to test attribute keys<br/>`action`: `Action<SvgNode, string, string>` - Action to perform on matching attributes | `SvgQueryBuilder` | Selects and processes attributes matching the key predicate |
+| **Transformation Methods** | | | |
+| `Transform(action)` | `action`: `Action<SvgNode>` - Transformation to apply to each selected node | `SvgQueryBuilder` | Applies a transformation to selected nodes |
+| `Continue()` | *None* | `SvgQueryBuilder` | Continues the query chain, typically used after operations that modify the document structure |
+| **Execution Methods** | | | |
+| `Build()` | *None* | `SvgResult` | Executes the query and returns the results |
+
+# Method Examples
+
+## Select Nodes
+
+```csharp
+var builder = svg.Query()
+    .Select(n => n.Name == "path")
+    .Select(n => n.Attributes.ContainsKey("fill"));
+```
+
+## Process Attributes
+
+```csharp
+builder.SelectAttributes(
+    key => key.StartsWith("data-"),
+    (node, key, value) => node.RemoveAttribute(key)
+);
+```
+```
+
+
+----
+
+
+## Writing Style and Clarity
+
+### ✅ DO: Write Technical, Implementation-Focused Content
 Focus on practical implementation details with clear explanations:
 
 ```markdown
@@ -217,7 +349,7 @@ This approach provides several benefits:
 - Centralizes data access patterns across the application
 ```
 
-##### ❌ DON'T: Write Generic Marketing-Style Content
+### ❌ DON'T: Write Generic Marketing-Style Content
 Avoid vague, non-technical descriptions that don't help developers:
 
 ```markdown
@@ -240,9 +372,9 @@ public interface IUserRepository
 This pattern is crucial for modern application development and will enhance your architecture significantly.
 ```
 
-#### Code Examples Quality
+## Code Examples Quality
 
-##### ✅ DO: Provide Complete, Runnable Code Examples
+### ✅ DO: Provide Complete, Runnable Code Examples
 Include all necessary imports, error handling, and context:
 
 ```csharp
@@ -291,7 +423,7 @@ namespace MyApp.Data.Repositories
 }
 ```
 
-##### ❌ DON'T: Provide Incomplete Code Snippets
+### ❌ DON'T: Provide Incomplete Code Snippets
 Avoid code fragments that leave developers guessing:
 
 ```csharp
@@ -308,9 +440,9 @@ public class ProductRepository
 }
 ```
 
-#### Frontmatter and Metadata
+## Frontmatter and Metadata
 
-##### ✅ DO: Include Comprehensive Frontmatter
+### ✅ DO: Include Comprehensive Frontmatter
 Provide detailed metadata for better discoverability:
 
 ```markdown
@@ -326,7 +458,7 @@ prerequisites: [ASP.NET Core fundamentals, Dependency Injection, Basic CQRS conc
 # Implementing CQRS with MediatR
 ```
 
-##### ❌ DON'T: Use Minimal or Missing Frontmatter
+### ❌ DON'T: Use Minimal or Missing Frontmatter
 Avoid inadequate metadata that hurts discoverability:
 
 ```markdown
@@ -339,9 +471,9 @@ title: CQRS
 Some information about CQRS...
 ```
 
-#### Security and Performance Guidance
+## Security and Performance Guidance
 
-##### ✅ DO: Include Specific Security Guidance with Examples
+### ✅ DO: Include Specific Security Guidance with Examples
 Provide actionable security recommendations with concrete examples:
 
 ```markdown
@@ -403,19 +535,20 @@ public async Task<IActionResult> Login([FromBody] LoginRequest request)
 }
 ```
 
-### Rolling Technical Documentation Concept
+
+
+## Rolling Technical Documentation Concept
 
 The rolling technical documentation concept ensures continuous refinement and synchronization with evolving codebases. This iterative approach maintains documentation accuracy and practical value.
 
-#### Implementation Strategy
+### Implementation Strategy
 - **Version Tracking**: Update documentation alongside code changes using the same pull request
 - **Change Documentation**: Document breaking changes, new features, and deprecations immediately
 - **Review Integration**: Include documentation updates in code review processes
 - **Validation**: Regularly validate examples against current codebase to ensure they remain functional
 
-#### Practical Examples
 
-##### ✅ DO: Update Documentation with Code Changes
+### ✅ DO: Update Documentation with Code Changes
 When adding a new parameter to an API endpoint:
 
 ```csharp
@@ -451,7 +584,7 @@ Send a POST request to `/users` to create a new user account.
 ```
 ```
 
-##### ❌ DON'T: Let Documentation Become Stale
+### ❌ DON'T: Let Documentation Become Stale
 Avoid documentation that doesn't reflect current implementation:
 
 ```markdown
@@ -529,9 +662,10 @@ Retrieve user profile information.
 
 
 
-### Client Library Documentation
+## Client Library Documentation
 
-#### Structure Template
+### Structure Template
+
 ```markdown
 ---
 title: Six.Keycloak Admin Client
